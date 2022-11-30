@@ -1,0 +1,40 @@
+---
+user: "nativermm"
+python_ver: "3.10.8"
+go_ver: "1.18.5"
+backend_repo: "https://github.com/nativeit/nativermm.git"
+frontend_repo: "https://github.com/nativeit/nativermm-web.git"
+scripts_repo: "https://github.com/nativeit/community-scripts.git"
+backend_dir: "/opt/nativermm"
+frontend_dir: "/opt/nativermm-web"
+scripts_dir: "/opt/nativermm-community-scripts"
+nativermm_dir: "{{ backend_dir }}/api/nativermm/nativermm"
+mesh_dir: "/opt/meshcentral"
+settings_file: "{{ nativermm_dir }}/settings.py"
+local_settings_file: "{{ nativermm_dir }}/local_settings.py"
+fullchain_dest: /etc/ssl/certs/fullchain.pem
+privkey_dest: /etc/ssl/certs/privkey.pem
+
+base_pkgs:
+  - build-essential
+  - curl
+  - wget
+  - dirmngr
+  - gnupg
+  - openssl
+  - gcc
+  - g++
+  - make
+  - ca-certificates
+  - git
+
+python_pkgs:
+  - zlib1g-dev
+  - libncurses5-dev
+  - libgdbm-dev
+  - libnss3-dev
+  - libssl-dev
+  - libreadline-dev
+  - libffi-dev
+  - libsqlite3-dev
+  - libbz2-dev

@@ -1,0 +1,14 @@
+[Unit]
+Description=NativeRMM Nats Api
+After=nats.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/nats-api -config {{ backend_dir }}/api/nativermm/nats-api.conf
+User={{ user }}
+Group={{ user }}
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

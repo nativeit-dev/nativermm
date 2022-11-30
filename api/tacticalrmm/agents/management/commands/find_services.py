@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from agents.models import Agent
-from tacticalrmm.constants import AGENT_DEFER
+from nativermm.constants import AGENT_DEFER
 
 
 class Command(BaseCommand):

@@ -3,11 +3,11 @@ from unittest.mock import call, patch
 from django.core.management import call_command
 from model_bakery import baker
 
-from tacticalrmm.constants import AgentMonType, AgentPlat
-from tacticalrmm.test import TacticalTestCase
+from nativermm.constants import AgentMonType, AgentPlat
+from nativermm.test import NativeTestCase
 
 
-class TestBulkRestartAgents(TacticalTestCase):
+class TestBulkRestartAgents(NativeTestCase):
     def setUp(self) -> None:
         self.authenticate()
         self.setup_coresettings()

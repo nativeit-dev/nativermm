@@ -2,8 +2,8 @@
 
 ## Supported Versions
 
-[Latest](https://github.com/amidaware/tacticalrmm/releases/latest) release
+[Latest](https://github.com/nativeit/nativermm/releases/latest) release
 
 ## Reporting a Vulnerability
 
-https://docs.tacticalrmm.com/security
+https://docs.nativermm.com/security

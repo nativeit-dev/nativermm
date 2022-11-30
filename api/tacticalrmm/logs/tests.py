@@ -4,13 +4,13 @@ from unittest.mock import patch
 from django.utils import timezone as djangotime
 from model_bakery import baker, seq
 
-from tacticalrmm.constants import DebugLogLevel, DebugLogType, PAAction, PAStatus
-from tacticalrmm.test import TacticalTestCase
+from nativermm.constants import DebugLogLevel, DebugLogType, PAAction, PAStatus
+from nativermm.test import NativeTestCase
 
 base_url = "/logs"
 
 
-class TestAuditViews(TacticalTestCase):
+class TestAuditViews(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -198,7 +198,7 @@ class TestAuditViews(TacticalTestCase):
             action_type=PAAction.SCHED_REBOOT,
             details={
                 "time": "2021-01-13 18:20:00",
-                "taskname": "TacticalRMM_SchedReboot_wYzCCDVXlc",
+                "taskname": "NativeRMM_SchedReboot_wYzCCDVXlc",
             },
         )
 
@@ -208,7 +208,7 @@ class TestAuditViews(TacticalTestCase):
         self.assertEqual(r.status_code, 200)
         nats_data = {
             "func": "delschedtask",
-            "schedtaskpayload": {"name": "TacticalRMM_SchedReboot_wYzCCDVXlc"},
+            "schedtaskpayload": {"name": "NativeRMM_SchedReboot_wYzCCDVXlc"},
         }
         nats_cmd.assert_called_with(nats_data, timeout=10)
 
@@ -224,7 +224,7 @@ class TestAuditViews(TacticalTestCase):
             action_type=PAAction.SCHED_REBOOT,
             details={
                 "time": "2021-01-13 18:20:00",
-                "taskname": "TacticalRMM_SchedReboot_wYzCCDVXlc",
+                "taskname": "NativeRMM_SchedReboot_wYzCCDVXlc",
             },
         )
 
@@ -478,7 +478,7 @@ class TestAuditViews(TacticalTestCase):
         self.check_not_authorized("delete", unauthorized_url)
 
 
-class TestLogTasks(TacticalTestCase):
+class TestLogTasks(NativeTestCase):
     def test_prune_debug_log(self):
         from .models import DebugLog
         from .tasks import prune_debug_log

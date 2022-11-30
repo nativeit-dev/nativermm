@@ -1,7 +1,7 @@
 FROM nats:2.9.6-alpine
 
-ENV TACTICAL_DIR /opt/tactical
-ENV TACTICAL_READY_FILE ${TACTICAL_DIR}/tmp/tactical.ready
+ENV NATIVERMM_DIR /opt/nativermm
+ENV NATIVE_READY_FILE ${NATIVERMM_DIR}/tmp/nativermm.ready
 
 RUN apk add --no-cache supervisor bash
 
@@ -13,13 +13,12 @@ RUN chmod +x /usr/local/bin/nats-api
 RUN touch /usr/local/bin/config_watcher.sh
 RUN chown 1000:1000 /usr/local/bin/config_watcher.sh
 
-
 RUN mkdir -p /var/log/supervisor
 RUN mkdir -p /etc/supervisor/conf.d
 RUN touch /etc/supervisor/conf.d/supervisor.conf
 RUN chown 1000:1000 /etc/supervisor/conf.d/supervisor.conf
 
-COPY docker/containers/tactical-nats/entrypoint.sh /
+COPY docker/containers/nativermm-nats/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]

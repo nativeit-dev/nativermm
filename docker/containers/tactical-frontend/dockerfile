@@ -4,27 +4,27 @@ ENV PUBLIC_DIR /usr/share/nginx/html
 
 USER root
 
-RUN deluser --remove-home nginx \
-  && addgroup -S nginx -g 1000 \
-  && adduser -S -G nginx -u 1000 nginx
+RUN deluser --remove-home nginx &&
+  addgroup -S nginx -g 1000 &&
+  adduser -S -G nginx -u 1000 nginx
 
 RUN apk add --no-cache bash wget tar grep
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
-COPY api/tacticalrmm/tacticalrmm/settings.py /tmp/settings.py
+COPY api/nativermm/nativermm/settings.py /tmp/settings.py
 
-RUN WEB_VERSION=$(grep -o 'WEB_VERSION.*' /tmp/settings.py | cut -d'"' -f 2) \
-  && webtar="trmm-web-v${WEB_VERSION}.tar.gz" \
-  && wget -q "https://github.com/amidaware/tacticalrmm-web/releases/download/v${WEB_VERSION}/${webtar}" -O /tmp/${webtar} \
-  && tar -xzf /tmp/${webtar} -C ${PUBLIC_DIR} \
-  && rm -f /tmp/${webtar}
+RUN WEB_VERSION=$(grep -o 'WEB_VERSION.*' /tmp/settings.py | cut -d'"' -f 2) &&
+  webtar="nativermm-web-v${WEB_VERSION}.tar.gz" &&
+  wget -q "https://github.com/nativeit/nativermm-web/releases/download/v${WEB_VERSION}/${webtar}" -O /tmp/${webtar} &&
+  tar -xzf /tmp/${webtar} -C ${PUBLIC_DIR} &&
+  rm -f /tmp/${webtar}
 
 RUN mv ${PUBLIC_DIR}/dist/* ${PUBLIC_DIR}
 RUN rm -rf ${PUBLIC_DIR}/dist
 RUN chown -R nginx:nginx /etc/nginx && chown -R nginx:nginx ${PUBLIC_DIR}
 
-COPY docker/containers/tactical-frontend/entrypoint.sh /docker-entrypoint.d/
+COPY docker/containers/nativermm-frontend/entrypoint.sh /docker-entrypoint.d/
 RUN chmod +x /docker-entrypoint.d/entrypoint.sh
 
 USER nginx

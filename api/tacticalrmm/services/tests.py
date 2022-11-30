@@ -3,12 +3,12 @@ from unittest.mock import patch
 from model_bakery import baker
 
 from agents.models import Agent
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 base_url = "/services"
 
 
-class TestServiceViews(TacticalTestCase):
+class TestServiceViews(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -192,7 +192,7 @@ class TestServiceViews(TacticalTestCase):
         self.check_not_authenticated("put", url)
 
 
-class TestServicePermissions(TacticalTestCase):
+class TestServicePermissions(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.setup_client()

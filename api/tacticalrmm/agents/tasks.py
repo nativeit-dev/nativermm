@@ -10,8 +10,8 @@ from agents.models import Agent
 from core.utils import get_core_settings
 from logs.models import DebugLog
 from scripts.models import Script
-from tacticalrmm.celery import app
-from tacticalrmm.constants import (
+from nativermm.celery import app
+from nativermm.constants import (
     AGENT_DEFER,
     AGENT_STATUS_OVERDUE,
     CheckStatus,
@@ -215,7 +215,7 @@ def run_script_email_results_task(
 def clear_faults_task(older_than_days: int) -> None:
     from alerts.models import Alert
 
-    # https://github.com/amidaware/tacticalrmm/issues/484
+    # https://github.com/nativeit/nativermm/issues/484
     agents = Agent.objects.exclude(last_seen__isnull=True).filter(
         last_seen__lt=djangotime.now() - djangotime.timedelta(days=older_than_days)
     )

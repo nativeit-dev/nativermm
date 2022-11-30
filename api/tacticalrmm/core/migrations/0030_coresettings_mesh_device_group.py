@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='coresettings',
             name='mesh_device_group',
-            field=models.CharField(blank=True, default='TacticalRMM', max_length=255, null=True),
+            field=models.CharField(blank=True, default='NativeRMM', max_length=255, null=True),
         ),
     ]

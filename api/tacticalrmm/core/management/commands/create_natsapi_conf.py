@@ -4,7 +4,7 @@ import os
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from tacticalrmm.helpers import get_nats_ports
+from nativermm.helpers import get_nats_ports
 
 
 class Command(BaseCommand):

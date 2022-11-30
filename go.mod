@@ -1,4 +1,4 @@
-module github.com/amidaware/tacticalrmm
+module github.com/nativeit/nativermm
 
 go 1.19
 
@@ -9,7 +9,7 @@ require (
 	github.com/nats-io/nats-server/v2 v2.9.6 // indirect
 	github.com/nats-io/nats.go v1.19.1
 	github.com/ugorji/go/codec v1.2.7
-	github.com/wh1te909/trmm-shared v0.0.0-20220227075846-f9f757361139
+	github.com/nativeit/nativermm-shared v0.0.0-20220227075846-f9f757361139
 	google.golang.org/protobuf v1.28.0 // indirect
 )
 

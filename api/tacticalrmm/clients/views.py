@@ -14,8 +14,8 @@ from rest_framework.views import APIView
 
 from agents.models import Agent
 from core.utils import get_core_settings
-from tacticalrmm.helpers import notify_error
-from tacticalrmm.permissions import _has_perm_on_client, _has_perm_on_site
+from nativermm.helpers import notify_error
+from nativermm.permissions import _has_perm_on_client, _has_perm_on_site
 
 from .models import Client, ClientCustomField, Deployment, Site, SiteCustomField
 from .permissions import ClientsPerms, DeploymentPerms, SitesPerms
@@ -351,7 +351,7 @@ class GenerateAgent(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, uid):
-        from tacticalrmm.utils import generate_winagent_exe
+        from nativermm.utils import generate_winagent_exe
 
         try:
             _ = uuid.UUID(uid, version=4)
@@ -364,7 +364,7 @@ class GenerateAgent(APIView):
         site = d.site.name.replace(" ", "").lower()
         client = re.sub(r"([^a-zA-Z0-9]+)", "", client)
         site = re.sub(r"([^a-zA-Z0-9]+)", "", site)
-        file_name = f"trmm-{client}-{site}-{d.mon_type}-{d.goarch}.exe"
+        file_name = f"nativermm-{client}-{site}-{d.mon_type}-{d.goarch}.exe"
 
         return generate_winagent_exe(
             client=d.client.pk,

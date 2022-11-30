@@ -22,7 +22,7 @@ __pycache__/
 env/
 local_settings.py
 db.sqlite3
-api/tacticalrmm/static
+api/nativermm/static
 celerybeat-schedule
 meshagent.exe
 meshagent-x86.exe
@@ -37,8 +37,8 @@ sync_salt_modules.py
 change_times.py
 rmm-*.exe
 rmm-*.ps1
-api/tacticalrmm/accounts/management/commands/*.json
-api/tacticalrmm/accounts/management/commands/random_data.py
+api/nativermm/accounts/management/commands/*.json
+api/nativermm/accounts/management/commands/random_data.py
 versioninfo.go
 resource.syso
 htmlcov/

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from scripts.models import Script
-from tacticalrmm.constants import TaskType
+from nativermm.constants import TaskType
 
 from .models import AutomatedTask, TaskResult
 

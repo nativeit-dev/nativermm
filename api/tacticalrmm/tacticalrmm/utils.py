@@ -18,7 +18,7 @@ from rest_framework.response import Response
 from agents.models import Agent
 from core.utils import get_core_settings, token_is_valid
 from logs.models import DebugLog
-from tacticalrmm.constants import (
+from nativermm.constants import (
     MONTH_DAYS,
     MONTHS,
     WEEK_DAYS,
@@ -28,7 +28,7 @@ from tacticalrmm.constants import (
     DebugLogType,
     ScriptShell,
 )
-from tacticalrmm.helpers import get_certs, get_nats_ports, notify_error
+from nativermm.helpers import get_certs, get_nats_ports, notify_error
 
 
 def generate_winagent_exe(
@@ -48,7 +48,7 @@ def generate_winagent_exe(
     from agents.utils import get_agent_url
 
     inno = (
-        f"tacticalagent-v{settings.LATEST_AGENT_VER}-{AgentPlat.WINDOWS}-{goarch}.exe"
+        f"nativeagent-v{settings.LATEST_AGENT_VER}-{AgentPlat.WINDOWS}-{goarch}.exe"
     )
 
     codetoken, _ = token_is_valid()
@@ -164,7 +164,7 @@ def convert_to_iso_duration(string: str) -> str:
 def reload_nats() -> None:
     users = [
         {
-            "user": "tacticalrmm",
+            "user": "nativermm",
             "password": settings.SECRET_KEY,
             "permissions": {"publish": ">", "subscribe": ">"},
         }
@@ -252,8 +252,8 @@ KnoxAuthMiddlewareStack = lambda inner: KnoxAuthMiddlewareInstance(  # noqa
 )
 
 
-def get_latest_trmm_ver() -> str:
-    url = "https://raw.githubusercontent.com/amidaware/tacticalrmm/master/api/tacticalrmm/tacticalrmm/settings.py"
+def get_latest_nativermm_ver() -> str:
+    url = "https://raw.githubusercontent.com/nativeit/nativermm/master/api/nativermm/nativermm/settings.py"
     try:
         r = requests.get(url, timeout=5)
     except:
@@ -261,7 +261,7 @@ def get_latest_trmm_ver() -> str:
 
     try:
         for line in r.text.splitlines():
-            if "TRMM_VERSION" in line:
+            if "NATIVERMM_VERSION" in line:
                 return line.split(" ")[2].strip('"')
     except Exception as e:
         DebugLog.error(message=str(e))

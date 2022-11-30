@@ -2,11 +2,11 @@ from django.utils import timezone as djangotime
 from model_bakery import baker
 
 from autotasks.models import TaskResult
-from tacticalrmm.constants import CustomFieldModel, CustomFieldType, TaskStatus
-from tacticalrmm.test import TacticalTestCase
+from nativermm.constants import CustomFieldModel, CustomFieldType, TaskStatus
+from nativermm.test import NativeTestCase
 
 
-class TestAPIv3(TacticalTestCase):
+class TestAPIv3(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()

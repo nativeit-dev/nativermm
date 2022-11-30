@@ -8,7 +8,7 @@ from django.db.models import F
 from django.utils import timezone as djangotime
 
 from agents.models import Agent
-from tacticalrmm.constants import AgentMonType
+from nativermm.constants import AgentMonType
 
 
 class DashInfo(AsyncJsonWebsocketConsumer):

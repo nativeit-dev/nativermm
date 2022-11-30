@@ -2,31 +2,31 @@
 
 set -e
 
-: "${TRMM_USER:=tactical}"
-: "${TRMM_PASS:=tactical}"
-: "${POSTGRES_HOST:=tactical-postgres}"
+: "${NATIVERMM_USER:=nativermm}"
+: "${NATIVERMM_PASS:=nativermm}"
+: "${POSTGRES_HOST:=nativermm-postgres}"
 : "${POSTGRES_PORT:=5432}"
-: "${POSTGRES_USER:=tactical}"
-: "${POSTGRES_PASS:=tactical}"
-: "${POSTGRES_DB:=tacticalrmm}"
-: "${MESH_SERVICE:=tactical-meshcentral}"
+: "${POSTGRES_USER:=nativermm}"
+: "${POSTGRES_PASS:=nativermm}"
+: "${POSTGRES_DB:=nativermm}"
+: "${MESH_SERVICE:=nativermm-meshcentral}"
 : "${MESH_WS_URL:=ws://${MESH_SERVICE}:4443}"
 : "${MESH_USER:=meshcentral}"
 : "${MESH_PASS:=meshcentralpass}"
-: "${MESH_HOST:=tactical-meshcentral}"
-: "${API_HOST:=tactical-backend}"
-: "${REDIS_HOST:=tactical-redis}"
+: "${MESH_HOST:=nativermm-meshcentral}"
+: "${API_HOST:=nativermm-backend}"
+: "${REDIS_HOST:=nativermm-redis}"
 : "${API_PORT:=8000}"
 
-: "${CERT_PRIV_PATH:=${TACTICAL_DIR}/certs/privkey.pem}"
-: "${CERT_PUB_PATH:=${TACTICAL_DIR}/certs/fullchain.pem}"
+: "${CERT_PRIV_PATH:=${NATIVERMM_DIR}/certs/privkey.pem}"
+: "${CERT_PUB_PATH:=${NATIVERMM_DIR}/certs/fullchain.pem}"
 
 # Add python venv to path
 export PATH="${VIRTUAL_ENV}/bin:$PATH"
 
-function check_tactical_ready {
+function check_native_ready {
   sleep 15
-  until [ -f "${TACTICAL_READY_FILE}" ]; do
+  until [ -f "${NATIVE_READY_FILE}" ]; do
     echo "waiting for init container to finish install or update..."
     sleep 10
   done
@@ -46,7 +46,7 @@ function django_setup {
   echo "setting up django environment"
 
   # configure django settings
-  MESH_TOKEN="$(cat ${TACTICAL_DIR}/tmp/mesh_token)"
+  MESH_TOKEN="$(cat ${NATIVERMM_DIR}/tmp/mesh_token)"
 
   DJANGO_SEKRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 80 | head -n 1)
   
@@ -90,7 +90,7 @@ ADMIN_ENABLED = True
 EOF
 )"
 
-  echo "${localvars}" > ${WORKSPACE_DIR}/api/tacticalrmm/tacticalrmm/local_settings.py
+  echo "${localvars}" > ${WORKSPACE_DIR}/api/nativermm/nativermm/local_settings.py
 
   # run migrations and init scripts
   "${VIRTUAL_ENV}"/bin/python manage.py pre_update_tasks
@@ -107,29 +107,29 @@ EOF
   
 
   # create super user 
-  echo "from accounts.models import User; User.objects.create_superuser('${TRMM_USER}', 'admin@example.com', '${TRMM_PASS}') if not User.objects.filter(username='${TRMM_USER}').exists() else 0;" | python manage.py shell
+  echo "from accounts.models import User; User.objects.create_superuser('${NATIVERMM_USER}', 'admin@example.com', '${NATIVERMM_PASS}') if not User.objects.filter(username='${NATIVERMM_USER}').exists() else 0;" | python manage.py shell
 }
 
-if [ "$1" = 'tactical-init-dev' ]; then
+if [ "$1" = 'nativermm-init-dev' ]; then
 
   # make directories if they don't exist
-  mkdir -p "${TACTICAL_DIR}/tmp"
+  mkdir -p "${NATIVERMM_DIR}/tmp"
 
-  test -f "${TACTICAL_READY_FILE}" && rm "${TACTICAL_READY_FILE}"
+  test -f "${NATIVE_READY_FILE}" && rm "${NATIVE_READY_FILE}"
 
   mkdir -p /meshcentral-data
-  mkdir -p ${TACTICAL_DIR}/tmp
-  mkdir -p ${TACTICAL_DIR}/certs
+  mkdir -p ${NATIVERMM_DIR}/tmp
+  mkdir -p ${NATIVERMM_DIR}/certs
   mkdir -p /mongo/data/db
   mkdir -p /redis/data
   touch /meshcentral-data/.initialized && chown -R 1000:1000 /meshcentral-data
-  touch ${TACTICAL_DIR}/tmp/.initialized && chown -R 1000:1000 ${TACTICAL_DIR}
-  touch ${TACTICAL_DIR}/certs/.initialized && chown -R 1000:1000 ${TACTICAL_DIR}/certs
+  touch ${NATIVERMM_DIR}/tmp/.initialized && chown -R 1000:1000 ${NATIVERMM_DIR}
+  touch ${NATIVERMM_DIR}/certs/.initialized && chown -R 1000:1000 ${NATIVERMM_DIR}/certs
   touch /mongo/data/db/.initialized && chown -R 1000:1000 /mongo/data/db
   touch /redis/data/.initialized && chown -R 1000:1000 /redis/data
-  mkdir -p ${TACTICAL_DIR}/api/tacticalrmm/private/exe
-  mkdir -p ${TACTICAL_DIR}/api/tacticalrmm/private/log
-  touch ${TACTICAL_DIR}/api/tacticalrmm/private/log/django_debug.log
+  mkdir -p ${NATIVERMM_DIR}/api/nativermm/private/exe
+  mkdir -p ${NATIVERMM_DIR}/api/nativermm/private/log
+  touch ${NATIVERMM_DIR}/api/nativermm/private/log/django_debug.log
 
   # setup Python virtual env and install dependencies
   ! test -e "${VIRTUAL_ENV}" && python -m venv ${VIRTUAL_ENV}
@@ -139,31 +139,31 @@ if [ "$1" = 'tactical-init-dev' ]; then
 
   django_setup
 
-  # chown everything to tactical user
-  chown -R "${TACTICAL_USER}":"${TACTICAL_USER}" "${WORKSPACE_DIR}"
-  chown -R "${TACTICAL_USER}":"${TACTICAL_USER}" "${TACTICAL_DIR}"
+  # chown everything to nativermm user
+  chown -R "${NATIVE_USER}":"${NATIVE_USER}" "${WORKSPACE_DIR}"
+  chown -R "${NATIVE_USER}":"${NATIVE_USER}" "${NATIVERMM_DIR}"
 
   # create install ready file
-  su -c "echo 'tactical-init' > ${TACTICAL_READY_FILE}" "${TACTICAL_USER}"
+  su -c "echo 'nativermm-init' > ${NATIVE_READY_FILE}" "${NATIVE_USER}"
 fi
 
-if [ "$1" = 'tactical-api' ]; then
-  check_tactical_ready
+if [ "$1" = 'nativermm-api' ]; then
+  check_native_ready
   "${VIRTUAL_ENV}"/bin/python manage.py runserver 0.0.0.0:"${API_PORT}"
 fi
 
-if [ "$1" = 'tactical-celery-dev' ]; then
-  check_tactical_ready
-  "${VIRTUAL_ENV}"/bin/celery -A tacticalrmm worker -l debug
+if [ "$1" = 'nativermm-celery-dev' ]; then
+  check_native_ready
+  "${VIRTUAL_ENV}"/bin/celery -A nativermm worker -l debug
 fi
 
-if [ "$1" = 'tactical-celerybeat-dev' ]; then
-  check_tactical_ready
-  test -f "${WORKSPACE_DIR}/api/tacticalrmm/celerybeat.pid" && rm "${WORKSPACE_DIR}/api/tacticalrmm/celerybeat.pid"
-  "${VIRTUAL_ENV}"/bin/celery -A tacticalrmm beat -l debug
+if [ "$1" = 'nativermm-celerybeat-dev' ]; then
+  check_native_ready
+  test -f "${WORKSPACE_DIR}/api/nativermm/celerybeat.pid" && rm "${WORKSPACE_DIR}/api/nativermm/celerybeat.pid"
+  "${VIRTUAL_ENV}"/bin/celery -A nativermm beat -l debug
 fi
 
-if [ "$1" = 'tactical-websockets-dev' ]; then
-  check_tactical_ready
-  "${VIRTUAL_ENV}"/bin/daphne tacticalrmm.asgi:application --port 8383 -b 0.0.0.0
+if [ "$1" = 'nativermm-websockets-dev' ]; then
+  check_native_ready
+  "${VIRTUAL_ENV}"/bin/daphne nativermm.asgi:application --port 8383 -b 0.0.0.0
 fi

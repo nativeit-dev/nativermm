@@ -5,13 +5,13 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SCRIPTS_DIR = "/opt/trmm-community-scripts"
+SCRIPTS_DIR = "/opt/nativermm-community-scripts"
 
 DOCKER_BUILD = False
 
-LOG_DIR = os.path.join(BASE_DIR, "tacticalrmm/private/log")
+LOG_DIR = os.path.join(BASE_DIR, "nativermm/private/log")
 
-EXE_DIR = os.path.join(BASE_DIR, "tacticalrmm/private/exe")
+EXE_DIR = os.path.join(BASE_DIR, "nativermm/private/exe")
 
 LINUX_AGENT_SCRIPT = BASE_DIR / "core" / "agent_linux.sh"
 
@@ -20,16 +20,16 @@ MAC_UNINSTALL = BASE_DIR / "core" / "mac_uninstall.sh"
 AUTH_USER_MODEL = "accounts.User"
 
 # latest release
-TRMM_VERSION = "0.15.4-dev"
+NATIVERMM_VERSION = "0.15.4-dev"
 
-# https://github.com/amidaware/tacticalrmm-web
+# https://github.com/nativeit/nativermm-web
 WEB_VERSION = "0.101.7"
 
 # bump this version everytime vue code is changed
 # to alert user they need to manually refresh their browser
 APP_VER = "0.0.174"
 
-# https://github.com/amidaware/rmmagent
+# https://github.com/nativeit/rmmagent
 LATEST_AGENT_VER = "2.4.2"
 
 MESH_VER = "1.0.97"
@@ -42,14 +42,14 @@ PIP_VER = "34"
 SETUPTOOLS_VER = "65.5.1"
 WHEEL_VER = "0.38.4"
 
-AGENT_BASE_URL = "https://agents.tacticalrmm.com"
+AGENT_BASE_URL = "https://agents.nativermm.com"
 CHECK_TOKEN_URL = f"{AGENT_BASE_URL}/api/v2/checktoken"
 AGENTS_URL = f"{AGENT_BASE_URL}/api/v2/agents/?"
 EXE_GEN_URL = f"{AGENT_BASE_URL}/api/v2/exe"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-ASGI_APPLICATION = "tacticalrmm.asgi.application"
+ASGI_APPLICATION = "nativermm.asgi.application"
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -59,7 +59,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "tacticalrmm/static/")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "nativermm/static/")]
 
 REST_KNOX = {
     "TOKEN_TTL": timedelta(hours=5),
@@ -86,16 +86,16 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "knox.auth.TokenAuthentication",
-        "tacticalrmm.auth.APIAuthentication",
+        "nativermm.auth.APIAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Tactical RMM API",
+    "TITLE": "Native RMM API",
     "DESCRIPTION": "Simple and Fast remote monitoring and management tool",
-    "VERSION": TRMM_VERSION,
-    "AUTHENTICATION_WHITELIST": ["tacticalrmm.auth.APIAuthentication"],
+    "VERSION": NATIVERMM_VERSION,
+    "AUTHENTICATION_WHITELIST": ["nativermm.auth.APIAuthentication"],
 }
 
 
@@ -149,7 +149,7 @@ warnings.simplefilter("ignore", CacheKeyWarning)
 
 CACHES = {
     "default": {
-        "BACKEND": "tacticalrmm.cache.TacticalRedisCache",
+        "BACKEND": "nativermm.cache.NativeRedisCache",
         "LOCATION": f"redis://{REDIS_HOST}:6379",
         "OPTIONS": {
             "parser_class": "redis.connection.HiredisParser",
@@ -162,11 +162,11 @@ CACHES = {
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    "tacticalrmm.middleware.LogIPMiddleware",
+    "nativermm.middleware.LogIPMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "tacticalrmm.middleware.AuditMiddleware",
+    "nativermm.middleware.AuditMiddleware",
 ]
 
 if SWAGGER_ENABLED:
@@ -188,10 +188,10 @@ if ADMIN_ENABLED:
     )
 
 if DEMO:
-    MIDDLEWARE += ("tacticalrmm.middleware.DemoMiddleware",)
+    MIDDLEWARE += ("nativermm.middleware.DemoMiddleware",)
 
 
-ROOT_URLCONF = "tacticalrmm.urls"
+ROOT_URLCONF = "nativermm.urls"
 
 
 TEMPLATES = [
@@ -210,7 +210,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "tacticalrmm.wsgi.application"
+WSGI_APPLICATION = "nativermm.wsgi.application"
 
 AUTH_PASSWORD_VALIDATORS = [
     {

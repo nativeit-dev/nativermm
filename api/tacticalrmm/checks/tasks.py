@@ -7,7 +7,7 @@ from django.utils import timezone as djangotime
 
 from alerts.models import Alert
 from checks.models import CheckResult
-from tacticalrmm.celery import app
+from nativermm.celery import app
 
 
 @app.task

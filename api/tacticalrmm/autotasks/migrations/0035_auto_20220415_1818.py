@@ -4,7 +4,7 @@ from django.db import migrations
 from django.db.models import Count
 
 from autotasks.models import generate_task_name
-from tacticalrmm.constants import TaskSyncStatus
+from nativermm.constants import TaskSyncStatus
 
 
 def check_for_win_task_name_duplicates(apps, schema_editor):

@@ -5,21 +5,21 @@ from django.utils import timezone as djangotime
 from model_bakery import baker
 
 from checks.models import CheckHistory, CheckResult
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AlertSeverity,
     CheckStatus,
     CheckType,
     EvtLogFailWhen,
     EvtLogTypes,
 )
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 from .serializers import CheckSerializer
 
 base_url = "/checks"
 
 
-class TestCheckViews(TacticalTestCase):
+class TestCheckViews(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -296,7 +296,7 @@ class TestCheckViews(TacticalTestCase):
         self.check_not_authenticated("patch", url)
 
 
-class TestCheckTasks(TacticalTestCase):
+class TestCheckTasks(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -875,7 +875,7 @@ class TestCheckTasks(TacticalTestCase):
         self.assertEqual(check_result.status, CheckStatus.PASSING)
 
 
-class TestCheckPermissions(TacticalTestCase):
+class TestCheckPermissions(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.setup_client()

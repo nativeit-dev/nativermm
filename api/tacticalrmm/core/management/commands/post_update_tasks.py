@@ -7,7 +7,7 @@ from agents.models import Agent
 from autotasks.models import AutomatedTask
 from checks.models import Check, CheckHistory
 from scripts.models import Script
-from tacticalrmm.constants import AGENT_DEFER, ScriptType
+from nativermm.constants import AGENT_DEFER, ScriptType
 
 
 class Command(BaseCommand):

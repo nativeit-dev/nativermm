@@ -18,9 +18,9 @@ from rest_framework.views import APIView
 from core.decorators import monitoring_view
 from core.utils import get_core_settings, sysd_svc_is_running, token_is_valid
 from logs.models import AuditLog
-from tacticalrmm.constants import AuditActionType, PAStatus
-from tacticalrmm.helpers import get_certs, notify_error
-from tacticalrmm.permissions import (
+from nativermm.constants import AuditActionType, PAStatus
+from nativermm.helpers import get_certs, notify_error
+from nativermm.permissions import (
     _has_perm_on_agent,
     _has_perm_on_client,
     _has_perm_on_site,
@@ -75,12 +75,12 @@ def clear_cache(request):
 @api_view()
 def dashboard_info(request):
     from core.utils import token_is_expired
-    from tacticalrmm.utils import get_latest_trmm_ver
+    from nativermm.utils import get_latest_nativermm_ver
 
     return Response(
         {
-            "trmm_version": settings.TRMM_VERSION,
-            "latest_trmm_ver": get_latest_trmm_ver(),
+            "nativermm_version": settings.NATIVERMM_VERSION,
+            "latest_nativermm_ver": get_latest_nativermm_ver(),
             "dark_mode": request.user.dark_mode,
             "show_community_scripts": request.user.show_community_scripts,
             "dbl_click_action": request.user.agent_dblclick_action,
@@ -106,7 +106,7 @@ def email_test(request):
     core = get_core_settings()
 
     msg, ok = core.send_mail(
-        subject="Test from Tactical RMM", body="This is a test message", test=True
+        subject="Test from Native RMM", body="This is a test message", test=True
     )
     if not ok:
         return notify_error(msg)
@@ -117,7 +117,7 @@ def email_test(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated, ServerMaintPerms])
 def server_maintenance(request):
-    from tacticalrmm.utils import reload_nats
+    from nativermm.utils import reload_nats
 
     if "action" not in request.data:
         return notify_error("The data is incorrect")
@@ -347,7 +347,7 @@ class RunURLAction(APIView):
 
         from agents.models import Agent
         from clients.models import Client, Site
-        from tacticalrmm.utils import replace_db_values
+        from nativermm.utils import replace_db_values
 
         if "agent_id" in request.data.keys():
             if not _has_perm_on_agent(request.user, request.data["agent_id"]):
@@ -399,7 +399,7 @@ class TwilioSMSTest(APIView):
                 "All fields are required, including at least 1 recipient"
             )
 
-        msg, ok = core.send_sms("TacticalRMM Test SMS", test=True)
+        msg, ok = core.send_sms("NativeRMM Test SMS", test=True)
         if not ok:
             return notify_error(msg)
 
@@ -425,7 +425,7 @@ def status(request):
     delta = expires - now
 
     ret = {
-        "version": settings.TRMM_VERSION,
+        "version": settings.NATIVERMM_VERSION,
         "latest_agent_version": settings.LATEST_AGENT_VER,
         "agent_count": Agent.objects.count(),
         "client_count": Client.objects.count(),

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SCRIPT_VERSION="70"
-SCRIPT_URL='https://raw.githubusercontent.com/amidaware/tacticalrmm/master/install.sh'
+SCRIPT_URL='https://raw.githubusercontent.com/nativeit/nativermm/master/install.sh'
 
 sudo apt install -y curl wget dirmngr gnupg lsb-release
 
@@ -11,9 +11,9 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-SCRIPTS_DIR='/opt/trmm-community-scripts'
+SCRIPTS_DIR='/opt/nativermm-community-scripts'
 PYTHON_VER='3.10.8'
-SETTINGS_FILE='/rmm/api/tacticalrmm/tacticalrmm/settings.py'
+SETTINGS_FILE='/rmm/api/nativermm/nativermm/settings.py'
 
 TMP_FILE=$(mktemp -p "" "rmminstall_XXXXXXXXXX")
 curl -s -L "${SCRIPT_URL}" > ${TMP_FILE}
@@ -279,12 +279,12 @@ until pg_isready > /dev/null; do
 
 print_green 'Creating database for the rmm'
 
-sudo -u postgres psql -c "CREATE DATABASE tacticalrmm"
+sudo -u postgres psql -c "CREATE DATABASE nativermm"
 sudo -u postgres psql -c "CREATE USER ${pgusername} WITH PASSWORD '${pgpw}'"
 sudo -u postgres psql -c "ALTER ROLE ${pgusername} SET client_encoding TO 'utf8'"
 sudo -u postgres psql -c "ALTER ROLE ${pgusername} SET default_transaction_isolation TO 'read committed'"
 sudo -u postgres psql -c "ALTER ROLE ${pgusername} SET timezone TO 'UTC'"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tacticalrmm TO ${pgusername}"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE nativermm TO ${pgusername}"
 
 print_green 'Cloning repos'
 
@@ -292,7 +292,7 @@ sudo mkdir /rmm
 sudo chown ${USER}:${USER} /rmm
 sudo mkdir -p /var/log/celery
 sudo chown ${USER}:${USER} /var/log/celery
-git clone https://github.com/amidaware/tacticalrmm.git /rmm/
+git clone https://github.com/nativeit/nativermm.git /rmm/
 cd /rmm
 git config user.email "admin@example.com"
 git config user.name "Bob"
@@ -300,7 +300,7 @@ git checkout master
 
 sudo mkdir -p ${SCRIPTS_DIR}
 sudo chown ${USER}:${USER} ${SCRIPTS_DIR}
-git clone https://github.com/amidaware/community-scripts.git ${SCRIPTS_DIR}/
+git clone https://github.com/nativeit/community-scripts.git ${SCRIPTS_DIR}/
 cd ${SCRIPTS_DIR}
 git config user.email "admin@example.com"
 git config user.name "Bob"
@@ -352,8 +352,8 @@ meshcfg="$(cat << EOF
   },
   "domains": {
     "": {
-      "title": "Tactical RMM",
-      "title2": "Tactical RMM",
+      "title": "Native RMM",
+      "title2": "Native RMM",
       "newAccounts": false,
       "certUrl": "https://${meshdomain}:443/",
       "geoLocation": true,
@@ -382,7 +382,7 @@ CORS_ORIGIN_WHITELIST = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tacticalrmm',
+        'NAME': 'nativermm',
         'USER': '${pgusername}',
         'PASSWORD': '${pgpw}',
         'HOST': 'localhost',
@@ -396,7 +396,7 @@ REDIS_HOST    = "localhost"
 ADMIN_ENABLED = True
 EOF
 )"
-echo "${localvars}" > /rmm/api/tacticalrmm/tacticalrmm/local_settings.py
+echo "${localvars}" > /rmm/api/nativermm/nativermm/local_settings.py
 
 sudo cp /rmm/natsapi/bin/nats-api /usr/local/bin
 sudo chown ${USER}:${USER} /usr/local/bin/nats-api
@@ -410,10 +410,10 @@ WHEEL_VER=$(grep "^WHEEL_VER" "$SETTINGS_FILE" | awk -F'[= "]' '{print $5}')
 cd /rmm/api
 python3.10 -m venv env
 source /rmm/api/env/bin/activate
-cd /rmm/api/tacticalrmm
+cd /rmm/api/nativermm
 pip install --no-cache-dir --upgrade pip
 pip install --no-cache-dir setuptools==${SETUPTOOLS_VER} wheel==${WHEEL_VER}
-pip install --no-cache-dir -r /rmm/api/tacticalrmm/requirements.txt
+pip install --no-cache-dir -r /rmm/api/nativermm/requirements.txt
 python manage.py migrate
 python manage.py collectstatic --no-input
 python manage.py create_natsapi_conf
@@ -438,13 +438,13 @@ read -n 1 -s -r -p "Press any key to continue..."
 
 rmmservice="$(cat << EOF
 [Unit]
-Description=tacticalrmm uwsgi daemon
+Description=nativermm uwsgi daemon
 After=network.target postgresql.service
 
 [Service]
 User=${USER}
 Group=www-data
-WorkingDirectory=/rmm/api/tacticalrmm
+WorkingDirectory=/rmm/api/nativermm
 Environment="PATH=/rmm/api/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ExecStart=/rmm/api/env/bin/uwsgi --ini app.ini
 Restart=always
@@ -464,9 +464,9 @@ After=network.target
 [Service]
 User=${USER}
 Group=www-data
-WorkingDirectory=/rmm/api/tacticalrmm
+WorkingDirectory=/rmm/api/nativermm
 Environment="PATH=/rmm/api/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-ExecStart=/rmm/api/env/bin/daphne -u /rmm/daphne.sock tacticalrmm.asgi:application
+ExecStart=/rmm/api/env/bin/daphne -u /rmm/daphne.sock nativermm.asgi:application
 ExecStartPre=rm -f /rmm/daphne.sock
 ExecStartPre=rm -f /rmm/daphne.sock.lock
 Restart=always
@@ -486,7 +486,7 @@ After=network.target
 [Service]
 PrivateTmp=true
 Type=simple
-ExecStart=/usr/local/bin/nats-server -c /rmm/api/tacticalrmm/nats-rmm.conf
+ExecStart=/usr/local/bin/nats-server -c /rmm/api/nativermm/nats-rmm.conf
 ExecReload=/usr/bin/kill -s HUP \$MAINPID
 ExecStop=/usr/bin/kill -s SIGINT \$MAINPID
 User=${USER}
@@ -503,7 +503,7 @@ echo "${natsservice}" | sudo tee /etc/systemd/system/nats.service > /dev/null
 
 natsapi="$(cat << EOF
 [Unit]
-Description=TacticalRMM Nats Api v1
+Description=NativeRMM Nats Api v1
 After=nats.service
 
 [Service]
@@ -523,8 +523,8 @@ echo "${natsapi}" | sudo tee /etc/systemd/system/nats-api.service > /dev/null
 nginxrmm="$(cat << EOF
 server_tokens off;
 
-upstream tacticalrmm {
-    server unix:////rmm/api/tacticalrmm/tacticalrmm.sock;
+upstream nativermm {
+    server unix:////rmm/api/nativermm/nativermm.sock;
 }
 
 map \$http_user_agent \$ignore_ua {
@@ -545,8 +545,8 @@ server {
     listen [::]:443 ssl;
     server_name ${rmmdomain};
     client_max_body_size 300M;
-    access_log /rmm/api/tacticalrmm/tacticalrmm/private/log/access.log combined if=\$ignore_ua;
-    error_log /rmm/api/tacticalrmm/tacticalrmm/private/log/error.log;
+    access_log /rmm/api/nativermm/nativermm/private/log/access.log combined if=\$ignore_ua;
+    error_log /rmm/api/nativermm/nativermm/private/log/error.log;
     ssl_certificate ${CERT_PUB_KEY};
     ssl_certificate_key ${CERT_PRIV_KEY};
     
@@ -559,13 +559,13 @@ server {
     add_header X-Content-Type-Options nosniff;
     
     location /static/ {
-        root /rmm/api/tacticalrmm;
+        root /rmm/api/nativermm;
     }
 
     location /private/ {
         internal;
         add_header "Access-Control-Allow-Origin" "https://${frontenddomain}";
-        alias /rmm/api/tacticalrmm/tacticalrmm/private/;
+        alias /rmm/api/nativermm/nativermm/private/;
     }
 
     location ~ ^/ws/ {
@@ -595,7 +595,7 @@ server {
     }
 
     location / {
-        uwsgi_pass  tacticalrmm;
+        uwsgi_pass  nativermm;
         include     /etc/nginx/uwsgi_params;
         uwsgi_read_timeout 300s;
         uwsgi_ignore_client_abort on;
@@ -665,7 +665,7 @@ Type=forking
 User=${USER}
 Group=${USER}
 EnvironmentFile=/etc/conf.d/celery.conf
-WorkingDirectory=/rmm/api/tacticalrmm
+WorkingDirectory=/rmm/api/nativermm
 ExecStart=/bin/sh -c '\${CELERY_BIN} -A \$CELERY_APP multi start \$CELERYD_NODES --pidfile=\${CELERYD_PID_FILE} --logfile=\${CELERYD_LOG_FILE} --loglevel="\${CELERYD_LOG_LEVEL}" \$CELERYD_OPTS'
 ExecStop=/bin/sh -c '\${CELERY_BIN} multi stopwait \$CELERYD_NODES --pidfile=\${CELERYD_PID_FILE} --loglevel="\${CELERYD_LOG_LEVEL}"'
 ExecReload=/bin/sh -c '\${CELERY_BIN} -A \$CELERY_APP multi restart \$CELERYD_NODES --pidfile=\${CELERYD_PID_FILE} --logfile=\${CELERYD_LOG_FILE} --loglevel="\${CELERYD_LOG_LEVEL}" \$CELERYD_OPTS'
@@ -683,17 +683,17 @@ CELERYD_NODES="w1"
 
 CELERY_BIN="/rmm/api/env/bin/celery"
 
-CELERY_APP="tacticalrmm"
+CELERY_APP="nativermm"
 
 CELERYD_MULTI="multi"
 
 CELERYD_OPTS="--time-limit=86400 --autoscale=20,2"
 
-CELERYD_PID_FILE="/rmm/api/tacticalrmm/%n.pid"
+CELERYD_PID_FILE="/rmm/api/nativermm/%n.pid"
 CELERYD_LOG_FILE="/var/log/celery/%n%I.log"
 CELERYD_LOG_LEVEL="ERROR"
 
-CELERYBEAT_PID_FILE="/rmm/api/tacticalrmm/beat.pid"
+CELERYBEAT_PID_FILE="/rmm/api/nativermm/beat.pid"
 CELERYBEAT_LOG_FILE="/var/log/celery/beat.log"
 EOF
 )"
@@ -710,7 +710,7 @@ Type=simple
 User=${USER}
 Group=${USER}
 EnvironmentFile=/etc/conf.d/celery.conf
-WorkingDirectory=/rmm/api/tacticalrmm
+WorkingDirectory=/rmm/api/nativermm
 ExecStart=/bin/sh -c '\${CELERY_BIN} -A \${CELERY_APP} beat --pidfile=\${CELERYBEAT_PID_FILE} --logfile=\${CELERYBEAT_LOG_FILE} --loglevel=\${CELERYD_LOG_LEVEL}'
 Restart=always
 RestartSec=10s
@@ -756,8 +756,8 @@ fi
 
 print_green 'Installing the frontend'
 
-webtar="trmm-web-v${WEB_VERSION}.tar.gz"
-wget -q https://github.com/amidaware/tacticalrmm-web/releases/download/v${WEB_VERSION}/${webtar} -O /tmp/${webtar}
+webtar="nativermm-web-v${WEB_VERSION}.tar.gz"
+wget -q https://github.com/nativeit/nativermm-web/releases/download/v${WEB_VERSION}/${webtar} -O /tmp/${webtar}
 sudo mkdir -p /var/www/rmm
 sudo tar -xzf /tmp/${webtar} -C /var/www/rmm
 echo "window._env_ = {PROD_URL: \"https://${rmmdomain}\"}" | sudo tee /var/www/rmm/dist/env-config.js > /dev/null
@@ -842,7 +842,7 @@ meshtoken="$(cat << EOF
 MESH_TOKEN_KEY = "${MESHTOKENKEY}"
 EOF
 )"
-echo "${meshtoken}" | tee --append /rmm/api/tacticalrmm/tacticalrmm/local_settings.py > /dev/null
+echo "${meshtoken}" | tee --append /rmm/api/nativermm/nativermm/local_settings.py > /dev/null
 
 
 print_green 'Creating meshcentral account and group'
@@ -864,11 +864,11 @@ while ! [[ $CHECK_MESH_READY2 ]]; do
   sleep 3
 done
 
-node node_modules/meshcentral/meshctrl.js --url wss://${meshdomain}:443 --loginuser ${meshusername} --loginpass ${MESHPASSWD} AddDeviceGroup --name TacticalRMM
+node node_modules/meshcentral/meshctrl.js --url wss://${meshdomain}:443 --loginuser ${meshusername} --loginpass ${MESHPASSWD} AddDeviceGroup --name NativeRMM
 sleep 1
 
 sudo systemctl enable nats.service
-cd /rmm/api/tacticalrmm
+cd /rmm/api/nativermm
 source /rmm/api/env/bin/activate
 python manage.py initial_db_setup
 python manage.py reload_nats
@@ -880,7 +880,7 @@ sudo systemctl enable nats-api.service
 sudo systemctl start nats-api.service
 
 ## disable django admin
-sed -i 's/ADMIN_ENABLED = True/ADMIN_ENABLED = False/g' /rmm/api/tacticalrmm/tacticalrmm/local_settings.py
+sed -i 's/ADMIN_ENABLED = True/ADMIN_ENABLED = False/g' /rmm/api/nativermm/nativermm/local_settings.py
 
 print_green 'Restarting services'
 for i in rmm.service daphne.service celery.service celerybeat.service

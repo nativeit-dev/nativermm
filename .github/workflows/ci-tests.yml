@@ -39,10 +39,10 @@ jobs:
           redis-server --version
 
       - name: Install requirements
-        working-directory: api/tacticalrmm
+        working-directory: api/nativermm
         run: |
           python --version
-          SETTINGS_FILE="tacticalrmm/settings.py"
+          SETTINGS_FILE="nativermm/settings.py"
           SETUPTOOLS_VER=$(grep "^SETUPTOOLS_VER" "$SETTINGS_FILE" | awk -F'[= "]' '{print $5}')
           WHEEL_VER=$(grep "^WHEEL_VER" "$SETTINGS_FILE" | awk -F'[= "]' '{print $5}')
           pip install --upgrade pip
@@ -52,13 +52,13 @@ jobs:
       - name: Codestyle black
         working-directory: api
         run: |
-          black --exclude migrations/ --check tacticalrmm
+          black --exclude migrations/ --check nativermm
           if [ $? -ne 0 ]; then
               exit 1
           fi
-      
+
       - name: Lint with flake8
-        working-directory: api/tacticalrmm
+        working-directory: api/nativermm
         run: |
           flake8 --config .flake8 .
           if [ $? -ne 0 ]; then
@@ -68,7 +68,7 @@ jobs:
       - name: Run django tests
         env:
           GHACTIONS: "yes"
-        working-directory: api/tacticalrmm
+        working-directory: api/nativermm
         run: |
           pytest
           if [ $? -ne 0 ]; then
@@ -77,6 +77,6 @@ jobs:
 
       - uses: codecov/codecov-action@v3
         with:
-          directory: ./api/tacticalrmm
-          files: ./api/tacticalrmm/coverage.xml
+          directory: ./api/nativermm
+          files: ./api/nativermm/coverage.xml
           verbose: true

@@ -1,6 +1,6 @@
 from model_bakery.recipe import Recipe
 
-from tacticalrmm.constants import CheckType, EvtLogTypes
+from nativermm.constants import CheckType, EvtLogTypes
 
 check = Recipe("checks.Check")
 

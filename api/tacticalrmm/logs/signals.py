@@ -3,8 +3,8 @@ import datetime as dt
 from django.db.models.signals import post_init
 from django.dispatch import receiver
 
-from tacticalrmm.constants import PAAction, PAStatus
-from tacticalrmm.helpers import date_is_in_past
+from nativermm.constants import PAAction, PAStatus
+from nativermm.helpers import date_is_in_past
 
 from .models import PendingAction
 

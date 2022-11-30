@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 
 from agents.models import Agent
 from logs.models import PendingAction
-from tacticalrmm.constants import PAAction
-from tacticalrmm.helpers import notify_error
+from nativermm.constants import PAAction
+from nativermm.helpers import notify_error
 
 from .models import ChocoSoftware, InstalledSoftware
 from .permissions import SoftwarePerms

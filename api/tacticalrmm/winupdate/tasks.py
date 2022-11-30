@@ -9,8 +9,8 @@ from packaging import version as pyver
 
 from agents.models import Agent
 from logs.models import DebugLog
-from tacticalrmm.celery import app
-from tacticalrmm.constants import AGENT_STATUS_ONLINE, DebugLogType
+from nativermm.celery import app
+from nativermm.constants import AGENT_STATUS_ONLINE, DebugLogType
 
 
 @app.task

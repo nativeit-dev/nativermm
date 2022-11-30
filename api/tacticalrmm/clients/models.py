@@ -7,8 +7,8 @@ from django.db import models
 
 from agents.models import Agent
 from logs.models import BaseAuditModel
-from tacticalrmm.constants import AGENT_DEFER, AgentMonType, CustomFieldType, GoArch
-from tacticalrmm.models import PermissionQuerySet
+from nativermm.constants import AGENT_DEFER, AgentMonType, CustomFieldType, GoArch
+from nativermm.models import PermissionQuerySet
 
 
 def _default_failing_checks_data() -> Dict[str, bool]:

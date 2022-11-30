@@ -3,7 +3,7 @@
 from django.db import migrations
 from django.utils.timezone import make_aware
 
-from tacticalrmm.constants import TaskType
+from nativermm.constants import TaskType
 
 
 def migrate_script_data(apps, schema_editor):

@@ -8,7 +8,7 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/api/tacticalrmm/manage.py",
+            "program": "${workspaceFolder}/api/nativermm/manage.py",
             "args": [
                 "runserver",
                 "0.0.0.0:8000"
@@ -24,8 +24,8 @@
             "preLaunchTask": "docker debug",
             "pathMappings": [
                 {
-                    "localRoot": "${workspaceFolder}/api/tacticalrmm",
-                    "remoteRoot": "/workspace/api/tacticalrmm"
+                    "localRoot": "${workspaceFolder}/api/nativermm",
+                    "remoteRoot": "/workspace/api/nativermm"
                 }
             ]
         }

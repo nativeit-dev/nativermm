@@ -4,7 +4,7 @@ import requests
 from django.test import override_settings
 
 from checks.constants import CHECK_DEFER, CHECK_RESULT_DEFER
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AGENT_DEFER,
     CHECKS_NON_EDITABLE_FIELDS,
     FIELDS_TRIGGER_TASK_UPDATE_AGENT,
@@ -12,12 +12,12 @@ from tacticalrmm.constants import (
     POLICY_CHECK_FIELDS_TO_COPY,
     POLICY_TASK_FIELDS_TO_COPY,
 )
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 from .utils import bitdays_to_string, generate_winagent_exe, get_bit_days, reload_nats
 
 
-class TestUtils(TacticalTestCase):
+class TestUtils(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
 

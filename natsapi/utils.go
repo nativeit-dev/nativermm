@@ -9,14 +9,14 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	nativermm "github.com/nativeit/nativermm-shared"
 	nats "github.com/nats-io/nats.go"
-	trmm "github.com/wh1te909/trmm-shared"
 )
 
 func setupNatsOptions(key string) []nats.Option {
 	opts := []nats.Option{
-		nats.Name("TacticalRMM"),
-		nats.UserInfo("tacticalrmm", key),
+		nats.Name("NativeRMM"),
+		nats.UserInfo("nativermm", key),
 		nats.ReconnectWait(time.Second * 2),
 		nats.RetryOnFailedConnect(true),
 		nats.MaxReconnects(-1),
@@ -27,8 +27,8 @@ func setupNatsOptions(key string) []nats.Option {
 
 func GetConfig(cfg string) (db *sqlx.DB, r DjangoConfig, err error) {
 	if cfg == "" {
-		cfg = "/rmm/api/tacticalrmm/nats-api.conf"
-		if !trmm.FileExists(cfg) {
+		cfg = "/rmm/api/nativermm/nats-api.conf"
+		if !nativermm.FileExists(cfg) {
 			err = errors.New("unable to find config file")
 			return
 		}

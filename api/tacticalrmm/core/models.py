@@ -14,7 +14,7 @@ from twilio.base.exceptions import TwilioRestException
 from twilio.rest import Client as TwClient
 
 from logs.models import BaseAuditModel, DebugLog
-from tacticalrmm.constants import (
+from nativermm.constants import (
     CORESETTINGS_CACHE_KEY,
     CustomFieldModel,
     CustomFieldType,
@@ -70,7 +70,7 @@ class CoreSettings(BaseAuditModel):
     mesh_username = models.CharField(max_length=255, null=True, blank=True, default="")
     mesh_site = models.CharField(max_length=255, null=True, blank=True, default="")
     mesh_device_group = models.CharField(
-        max_length=255, null=True, blank=True, default="TacticalRMM"
+        max_length=255, null=True, blank=True, default="NativeRMM"
     )
     mesh_disable_auto_login = models.BooleanField(default=False)
     agent_auto_update = models.BooleanField(default=True)

@@ -3,8 +3,8 @@ from unittest.mock import call, patch
 from django.utils import timezone as djangotime
 from model_bakery import baker
 
-from tacticalrmm.constants import TaskType
-from tacticalrmm.test import TacticalTestCase
+from nativermm.constants import TaskType
+from nativermm.test import NativeTestCase
 
 from .models import AutomatedTask, TaskResult, TaskSyncStatus
 from .serializers import TaskSerializer
@@ -13,7 +13,7 @@ from .tasks import create_win_task_schedule, remove_orphaned_win_tasks, run_win_
 base_url = "/tasks"
 
 
-class TestAutotaskViews(TacticalTestCase):
+class TestAutotaskViews(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -378,7 +378,7 @@ class TestAutotaskViews(TacticalTestCase):
         self.check_not_authenticated("post", url)
 
 
-class TestAutoTaskCeleryTasks(TacticalTestCase):
+class TestAutoTaskCeleryTasks(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -400,9 +400,9 @@ class TestAutoTaskCeleryTasks(TacticalTestCase):
             "GoogleUpdateTaskMachineUA",
             "OneDrive Standalone Update Task-S-1-5-21-717461175-241712648-1206041384-1001",
             task1.win_task_name,
-            "TacticalRMM_fixmesh",
-            "TacticalRMM_SchedReboot_jk324kajd",
-            "TacticalRMM_iggrLcOaldIZnUzLuJWPLNwikiOoJJHHznb",  # orphaned task
+            "NativeRMM_fixmesh",
+            "NativeRMM_SchedReboot_jk324kajd",
+            "NativeRMM_iggrLcOaldIZnUzLuJWPLNwikiOoJJHHznb",  # orphaned task
         ]
 
         calls = [
@@ -411,7 +411,7 @@ class TestAutoTaskCeleryTasks(TacticalTestCase):
                 {
                     "func": "delschedtask",
                     "schedtaskpayload": {
-                        "name": "TacticalRMM_iggrLcOaldIZnUzLuJWPLNwikiOoJJHHznb"
+                        "name": "NativeRMM_iggrLcOaldIZnUzLuJWPLNwikiOoJJHHznb"
                     },
                 },
                 timeout=10,
@@ -432,7 +432,7 @@ class TestAutoTaskCeleryTasks(TacticalTestCase):
 
         # no orphaned tasks
         nats_cmd.reset_mock()
-        win_tasks.remove("TacticalRMM_iggrLcOaldIZnUzLuJWPLNwikiOoJJHHznb")
+        win_tasks.remove("NativeRMM_iggrLcOaldIZnUzLuJWPLNwikiOoJJHHznb")
         nats_cmd.side_effect = [win_tasks, "ok"]
         remove_orphaned_win_tasks()
         self.assertEqual(nats_cmd.call_count, 1)
@@ -759,7 +759,7 @@ class TestAutoTaskCeleryTasks(TacticalTestCase):
         )
 
 
-class TestTaskPermissions(TacticalTestCase):
+class TestTaskPermissions(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.setup_client()

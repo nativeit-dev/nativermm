@@ -1,12 +1,12 @@
 FROM nginxinc/nginx-unprivileged:stable-alpine
 
-ENV TACTICAL_DIR /opt/tactical
+ENV NATIVERMM_DIR /opt/nativermm
 
 USER root
 
-RUN deluser --remove-home nginx \
-  && addgroup -S nginx -g 1000 \
-  && adduser -S -G nginx -u 1000 nginx
+RUN deluser --remove-home nginx &&
+  addgroup -S nginx -g 1000 &&
+  adduser -S -G nginx -u 1000 nginx
 
 RUN apk add --no-cache openssl bash
 
@@ -14,7 +14,7 @@ RUN chown -R nginx:nginx /etc/nginx
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
-COPY docker/containers/tactical-nginx/entrypoint.sh /docker-entrypoint.d/
+COPY docker/containers/nativermm-nginx/entrypoint.sh /docker-entrypoint.d/
 RUN chmod +x /docker-entrypoint.d/entrypoint.sh
 
 USER nginx

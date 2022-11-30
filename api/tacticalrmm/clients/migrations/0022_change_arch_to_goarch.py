@@ -1,6 +1,6 @@
 from django.db import migrations
 
-from tacticalrmm.constants import GoArch
+from nativermm.constants import GoArch
 
 
 def change_arch(apps, schema_editor):

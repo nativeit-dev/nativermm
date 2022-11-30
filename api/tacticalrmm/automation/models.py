@@ -6,7 +6,7 @@ from django.db import models
 from agents.models import Agent
 from clients.models import Client, Site
 from logs.models import BaseAuditModel
-from tacticalrmm.constants import (
+from nativermm.constants import (
     CORESETTINGS_CACHE_KEY,
     AgentMonType,
     AgentPlat,

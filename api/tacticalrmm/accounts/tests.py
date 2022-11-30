@@ -5,11 +5,11 @@ from model_bakery import baker, seq
 
 from accounts.models import APIKey, User
 from accounts.serializers import APIKeySerializer
-from tacticalrmm.constants import AgentDblClick, AgentTableTabs, ClientTreeSort
-from tacticalrmm.test import TacticalTestCase
+from nativermm.constants import AgentDblClick, AgentTableTabs, ClientTreeSort
+from nativermm.test import NativeTestCase
 
 
-class TestAccounts(TacticalTestCase):
+class TestAccounts(NativeTestCase):
     def setUp(self):
         self.setup_client()
         self.bob = User(username="bob")
@@ -83,7 +83,7 @@ class TestAccounts(TacticalTestCase):
     #     self.assertIn("token", r.data.keys())
 
 
-class TestGetAddUsers(TacticalTestCase):
+class TestGetAddUsers(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -130,7 +130,7 @@ class TestGetAddUsers(TacticalTestCase):
         self.check_not_authenticated("post", url)
 
 
-class GetUpdateDeleteUser(TacticalTestCase):
+class GetUpdateDeleteUser(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -217,7 +217,7 @@ class GetUpdateDeleteUser(TacticalTestCase):
         self.assertEqual(r.status_code, 400)
 
 
-class TestUserAction(TacticalTestCase):
+class TestUserAction(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -297,7 +297,7 @@ class TestUserAction(TacticalTestCase):
         self.check_not_authenticated("patch", url)
 
 
-class TestAPIKeyViews(TacticalTestCase):
+class TestAPIKeyViews(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.authenticate()
@@ -359,7 +359,7 @@ class TestAPIKeyViews(TacticalTestCase):
         self.check_not_authenticated("delete", url)
 
 
-class TestTOTPSetup(TacticalTestCase):
+class TestTOTPSetup(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -386,7 +386,7 @@ class TestTOTPSetup(TacticalTestCase):
         self.assertEqual(r.data, "totp token already set")
 
 
-class TestAPIAuthentication(TacticalTestCase):
+class TestAPIAuthentication(NativeTestCase):
     def setUp(self):
         # create User and associate to API Key
         self.user = User.objects.create(username="api_user", is_superuser=True)

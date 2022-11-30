@@ -12,7 +12,7 @@ from django.core.cache import cache
 from django.http import FileResponse
 from meshctrl.utils import get_auth_token
 
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AGENT_TBL_PEND_ACTION_CNT_CACHE_PREFIX,
     CORESETTINGS_CACHE_KEY,
     ROLE_CACHE_PREFIX,
@@ -136,7 +136,7 @@ async def send_command_with_mesh(
                     "nodeids": [f"node//{node_id}"],
                     "runAsUser": run_as_user,
                     "type": shell,
-                    "responseid": "trmm",
+                    "responseid": "nativermm",
                 }
             )
         )
@@ -150,7 +150,7 @@ async def remove_mesh_agent(uri: str, mesh_node_id: str) -> None:
                 {
                     "action": "removedevices",
                     "nodeids": [f"node//{node_id}"],
-                    "responseid": "trmm",
+                    "responseid": "nativermm",
                 }
             )
         )

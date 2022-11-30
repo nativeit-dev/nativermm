@@ -22,7 +22,7 @@ from checks.models import CheckResult
 from core.models import TZ_CHOICES
 from core.utils import get_core_settings, send_command_with_mesh
 from logs.models import BaseAuditModel, DebugLog, PendingAction
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AGENT_STATUS_OFFLINE,
     AGENT_STATUS_ONLINE,
     AGENT_STATUS_OVERDUE,
@@ -40,8 +40,8 @@ from tacticalrmm.constants import (
     PAAction,
     PAStatus,
 )
-from tacticalrmm.helpers import get_nats_ports
-from tacticalrmm.models import PermissionQuerySet
+from nativermm.helpers import get_nats_ports
+from nativermm.models import PermissionQuerySet
 
 if TYPE_CHECKING:
     from alerts.models import Alert, AlertTemplate
@@ -168,7 +168,7 @@ class Agent(BaseAuditModel):
             return "not supported"
 
         url = get_agent_url(goarch=self.goarch, plat=self.plat, token=token)
-        bin = f"tacticalagent-v{ver}-{self.plat}-{self.goarch}.exe"
+        bin = f"nativeagent-v{ver}-{self.plat}-{self.goarch}.exe"
 
         if not force:
             if self.pendingactions.filter(  # type: ignore
@@ -799,7 +799,7 @@ class Agent(BaseAuditModel):
         nats_std_port, _ = get_nats_ports()
         options = {
             "servers": f"tls://{settings.ALLOWED_HOSTS[0]}:{nats_std_port}",
-            "user": "tacticalrmm",
+            "user": "nativermm",
             "password": settings.SECRET_KEY,
             "connect_timeout": 3,
             "max_reconnect_attempts": 2,
@@ -839,13 +839,13 @@ class Agent(BaseAuditModel):
         """
         if mode == "tacagent":
             if self.plat == AgentPlat.LINUX:
-                cmd = "systemctl restart tacticalagent.service"
+                cmd = "systemctl restart nativeagent.service"
                 shell = 3
             elif self.plat == AgentPlat.DARWIN:
-                cmd = "launchctl kickstart -k system/tacticalagent"
+                cmd = "launchctl kickstart -k system/nativeagent"
                 shell = 3
             else:
-                cmd = "net stop tacticalrmm & taskkill /F /IM tacticalrmm.exe & net start tacticalrmm"
+                cmd = "net stop nativermm & taskkill /F /IM nativermm.exe & net start nativermm"
                 shell = 1
 
             asyncio.run(

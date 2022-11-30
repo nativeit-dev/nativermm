@@ -12,14 +12,14 @@ from rest_framework.authtoken.models import Token
 from agents.models import Agent
 from core.utils import get_core_settings, get_meshagent_url
 from logs.models import PendingAction
-from tacticalrmm.constants import (
+from nativermm.constants import (
     CONFIG_MGMT_CMDS,
     CustomFieldModel,
     MeshAgentIdent,
     PAAction,
     PAStatus,
 )
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 from .consumers import DashInfo
 from .models import CustomField, GlobalKVStore, URLAction
@@ -27,7 +27,7 @@ from .serializers import CustomFieldSerializer, KeyStoreSerializer, URLActionSer
 from .tasks import core_maintenance_tasks, handle_resolved_stuff
 
 
-class TestCodeSign(TacticalTestCase):
+class TestCodeSign(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.authenticate()
@@ -55,7 +55,7 @@ class TestCodeSign(TacticalTestCase):
         self.check_not_authenticated("delete", self.url)
 
 
-class TestConsumers(TacticalTestCase):
+class TestConsumers(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.authenticate()
@@ -77,7 +77,7 @@ class TestConsumers(TacticalTestCase):
         await communicator.disconnect()
 
 
-class TestCoreTasks(TacticalTestCase):
+class TestCoreTasks(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.authenticate()
@@ -124,7 +124,7 @@ class TestCoreTasks(TacticalTestCase):
 
         self.check_not_authenticated("put", url)
 
-    @patch("tacticalrmm.utils.reload_nats")
+    @patch("nativermm.utils.reload_nats")
     @patch("autotasks.tasks.remove_orphaned_win_tasks.delay")
     def test_ui_maintenance_actions(self, remove_orphaned_win_tasks, reload_nats):
         url = "/core/servermaintenance/"
@@ -435,7 +435,7 @@ class TestCoreTasks(TacticalTestCase):
         self.assertEqual(old, 20)
 
 
-class TestCoreMgmtCommands(TacticalTestCase):
+class TestCoreMgmtCommands(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
 
@@ -444,13 +444,13 @@ class TestCoreMgmtCommands(TacticalTestCase):
             call_command("get_config", cmd)
 
 
-class TestCorePermissions(TacticalTestCase):
+class TestCorePermissions(NativeTestCase):
     def setUp(self):
         self.setup_client()
         self.setup_coresettings()
 
 
-class TestCoreUtils(TacticalTestCase):
+class TestCoreUtils(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
 
@@ -479,7 +479,7 @@ class TestCoreUtils(TacticalTestCase):
         )
 
     @override_settings(DOCKER_BUILD=True)
-    @override_settings(MESH_WS_URL="ws://tactical-meshcentral:4443")
+    @override_settings(MESH_WS_URL="ws://nativermm-meshcentral:4443")
     def test_get_meshagent_url_docker(self):
 
         r = get_meshagent_url(
@@ -490,7 +490,7 @@ class TestCoreUtils(TacticalTestCase):
         )
         self.assertEqual(
             r,
-            "http://tactical-meshcentral:4443/meshagents?id=abc123&installflags=2&meshinstall=10005",
+            "http://nativermm-meshcentral:4443/meshagents?id=abc123&installflags=2&meshinstall=10005",
         )
 
         r = get_meshagent_url(
@@ -501,5 +501,5 @@ class TestCoreUtils(TacticalTestCase):
         )
         self.assertEqual(
             r,
-            "http://tactical-meshcentral:4443/meshagents?id=4&meshid=abc123&installflags=0",
+            "http://nativermm-meshcentral:4443/meshagents?id=4&meshid=abc123&installflags=0",
         )

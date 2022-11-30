@@ -11,8 +11,8 @@ from agents.models import Agent
 from alerts.models import Alert
 from autotasks.models import AutomatedTask, TaskResult
 from logs.models import DebugLog
-from tacticalrmm.celery import app
-from tacticalrmm.constants import DebugLogType
+from nativermm.celery import app
+from nativermm.constants import DebugLogType
 
 
 @app.task
@@ -99,10 +99,10 @@ def remove_orphaned_win_tasks() -> None:
         ]
 
         exclude_tasks = (
-            "TacticalRMM_fixmesh",
-            "TacticalRMM_SchedReboot",
-            "TacticalRMM_sync",
-            "TacticalRMM_agentupdate",
+            "NativeRMM_fixmesh",
+            "NativeRMM_SchedReboot",
+            "NativeRMM_sync",
+            "NativeRMM_agentupdate",
         )
 
         for task in r:
@@ -110,7 +110,7 @@ def remove_orphaned_win_tasks() -> None:
                 # skip system tasks or any pending reboots
                 continue
 
-            if task.startswith("TacticalRMM_") and task not in agent_task_names:
+            if task.startswith("NativeRMM_") and task not in agent_task_names:
                 # delete task since it doesn't exist in UI
                 nats_data = {
                     "func": "delschedtask",

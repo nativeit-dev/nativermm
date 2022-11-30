@@ -2,10 +2,10 @@ from unittest.mock import patch
 
 from rest_framework.response import Response
 
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 
-class TestAgentInstalls(TacticalTestCase):
+class TestAgentInstalls(NativeTestCase):
     def setUp(self) -> None:
         self.authenticate()
         self.setup_coresettings()
@@ -13,7 +13,7 @@ class TestAgentInstalls(TacticalTestCase):
 
     @patch("agents.utils.generate_linux_install")
     @patch("knox.models.AuthToken.objects.create")
-    @patch("tacticalrmm.utils.generate_winagent_exe")
+    @patch("nativermm.utils.generate_winagent_exe")
     @patch("core.utils.token_is_valid")
     @patch("agents.utils.get_agent_url")
     def test_install_agent(

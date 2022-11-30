@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models.fields import CharField, DateTimeField
 
 from logs.models import BaseAuditModel
-from tacticalrmm.constants import (
+from nativermm.constants import (
     ROLE_CACHE_PREFIX,
     AgentDblClick,
     AgentTableTabs,

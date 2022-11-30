@@ -1,4 +1,4 @@
-from tacticalrmm.celery import app
+from nativermm.celery import app
 
 
 @app.task

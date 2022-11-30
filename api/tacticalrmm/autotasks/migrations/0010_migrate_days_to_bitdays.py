@@ -1,6 +1,6 @@
 from django.db import migrations
 
-from tacticalrmm.utils import get_bit_days
+from nativermm.utils import get_bit_days
 
 DAYS_OF_WEEK = {
     0: "Monday",

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from agents.models import Agent
-from tacticalrmm.helpers import notify_error
+from nativermm.helpers import notify_error
 
 from .permissions import WinSvcsPerms
 
@@ -34,7 +34,7 @@ class GetServices(APIView):
 
     def get(self, request, agent_id):
         if getattr(settings, "DEMO", False):
-            from tacticalrmm.demo_views import demo_get_services
+            from nativermm.demo_views import demo_get_services
 
             return demo_get_services()
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SCRIPT_VERSION="44"
-SCRIPT_URL='https://raw.githubusercontent.com/amidaware/tacticalrmm/master/restore.sh'
+SCRIPT_URL='https://raw.githubusercontent.com/nativeit/nativermm/master/restore.sh'
 
 sudo apt update
 sudo apt install -y curl wget dirmngr gnupg lsb-release
@@ -12,9 +12,9 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-SCRIPTS_DIR='/opt/trmm-community-scripts'
+SCRIPTS_DIR='/opt/nativermm-community-scripts'
 PYTHON_VER='3.10.8'
-SETTINGS_FILE='/rmm/api/tacticalrmm/tacticalrmm/settings.py'
+SETTINGS_FILE='/rmm/api/nativermm/nativermm/settings.py'
 
 TMP_FILE=$(mktemp -p "" "rmmrestore_XXXXXXXXXX")
 curl -s -L "${SCRIPT_URL}" > ${TMP_FILE}
@@ -98,7 +98,7 @@ print_green() {
 
 
 print_green 'Unpacking backup'
-tmp_dir=$(mktemp -d -t tacticalrmm-XXXXXXXXXXXXXXXXXXXXX)
+tmp_dir=$(mktemp -d -t nativermm-XXXXXXXXXXXXXXXXXXXXX)
 
 tar -xf ${1} -C $tmp_dir
 
@@ -228,7 +228,7 @@ sudo mkdir /rmm
 sudo chown ${USER}:${USER} /rmm
 sudo mkdir -p /var/log/celery
 sudo chown ${USER}:${USER} /var/log/celery
-git clone https://github.com/amidaware/tacticalrmm.git /rmm/
+git clone https://github.com/nativeit/nativermm.git /rmm/
 cd /rmm
 git config user.email "admin@example.com"
 git config user.name "Bob"
@@ -236,7 +236,7 @@ git checkout master
 
 sudo mkdir -p ${SCRIPTS_DIR}
 sudo chown ${USER}:${USER} ${SCRIPTS_DIR}
-git clone https://github.com/amidaware/community-scripts.git ${SCRIPTS_DIR}/
+git clone https://github.com/nativeit/community-scripts.git ${SCRIPTS_DIR}/
 cd ${SCRIPTS_DIR}
 git config user.email "admin@example.com"
 git config user.name "Bob"
@@ -264,10 +264,10 @@ npm install meshcentral@${MESH_VER}
 
 print_green 'Restoring the backend'
 
-cp $tmp_dir/rmm/local_settings.py /rmm/api/tacticalrmm/tacticalrmm/
+cp $tmp_dir/rmm/local_settings.py /rmm/api/nativermm/nativermm/
 cp $tmp_dir/rmm/env /rmm/web/.env
 gzip -d $tmp_dir/rmm/debug.log.gz
-cp $tmp_dir/rmm/django_debug.log /rmm/api/tacticalrmm/tacticalrmm/private/log/
+cp $tmp_dir/rmm/django_debug.log /rmm/api/nativermm/nativermm/private/log/
 
 sudo cp /rmm/natsapi/bin/nats-api /usr/local/bin
 sudo chown ${USER}:${USER} /usr/local/bin/nats-api
@@ -275,19 +275,19 @@ sudo chmod +x /usr/local/bin/nats-api
 
 print_green 'Restoring the database'
 
-pgusername=$(grep -w USER /rmm/api/tacticalrmm/tacticalrmm/local_settings.py | sed 's/^.*: //' | sed 's/.//' | sed -r 's/.{2}$//')
-pgpw=$(grep -w PASSWORD /rmm/api/tacticalrmm/tacticalrmm/local_settings.py | sed 's/^.*: //' | sed 's/.//' | sed -r 's/.{2}$//')
+pgusername=$(grep -w USER /rmm/api/nativermm/nativermm/local_settings.py | sed 's/^.*: //' | sed 's/.//' | sed -r 's/.{2}$//')
+pgpw=$(grep -w PASSWORD /rmm/api/nativermm/nativermm/local_settings.py | sed 's/^.*: //' | sed 's/.//' | sed -r 's/.{2}$//')
 
-sudo -u postgres psql -c "DROP DATABASE IF EXISTS tacticalrmm"
-sudo -u postgres psql -c "CREATE DATABASE tacticalrmm"
+sudo -u postgres psql -c "DROP DATABASE IF EXISTS nativermm"
+sudo -u postgres psql -c "CREATE DATABASE nativermm"
 sudo -u postgres psql -c "CREATE USER ${pgusername} WITH PASSWORD '${pgpw}'"
 sudo -u postgres psql -c "ALTER ROLE ${pgusername} SET client_encoding TO 'utf8'"
 sudo -u postgres psql -c "ALTER ROLE ${pgusername} SET default_transaction_isolation TO 'read committed'"
 sudo -u postgres psql -c "ALTER ROLE ${pgusername} SET timezone TO 'UTC'"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tacticalrmm TO ${pgusername}"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE nativermm TO ${pgusername}"
 
 gzip -d $tmp_dir/postgres/*.psql.gz
-PGPASSWORD=${pgpw} psql -h localhost -U ${pgusername} -d tacticalrmm -f $tmp_dir/postgres/db*.psql
+PGPASSWORD=${pgpw} psql -h localhost -U ${pgusername} -d nativermm -f $tmp_dir/postgres/db*.psql
 
 SETUPTOOLS_VER=$(grep "^SETUPTOOLS_VER" "$SETTINGS_FILE" | awk -F'[= "]' '{print $5}')
 WHEEL_VER=$(grep "^WHEEL_VER" "$SETTINGS_FILE" | awk -F'[= "]' '{print $5}')
@@ -295,10 +295,10 @@ WHEEL_VER=$(grep "^WHEEL_VER" "$SETTINGS_FILE" | awk -F'[= "]' '{print $5}')
 cd /rmm/api
 python3.10 -m venv env
 source /rmm/api/env/bin/activate
-cd /rmm/api/tacticalrmm
+cd /rmm/api/nativermm
 pip install --no-cache-dir --upgrade pip
 pip install --no-cache-dir setuptools==${SETUPTOOLS_VER} wheel==${WHEEL_VER}
-pip install --no-cache-dir -r /rmm/api/tacticalrmm/requirements.txt
+pip install --no-cache-dir -r /rmm/api/nativermm/requirements.txt
 python manage.py migrate
 python manage.py collectstatic --no-input
 python manage.py create_natsapi_conf
@@ -314,8 +314,8 @@ sudo systemctl start nats.service
 
 print_green 'Restoring the frontend'
 
-webtar="trmm-web-v${WEB_VERSION}.tar.gz"
-wget -q https://github.com/amidaware/tacticalrmm-web/releases/download/v${WEB_VERSION}/${webtar} -O /tmp/${webtar}
+webtar="nativermm-web-v${WEB_VERSION}.tar.gz"
+wget -q https://github.com/nativeit/nativermm-web/releases/download/v${WEB_VERSION}/${webtar} -O /tmp/${webtar}
 sudo mkdir -p /var/www/rmm
 sudo tar -xzf /tmp/${webtar} -C /var/www/rmm
 echo "window._env_ = {PROD_URL: \"https://${API}\"}" | sudo tee /var/www/rmm/dist/env-config.js > /dev/null

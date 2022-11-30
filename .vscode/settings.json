@@ -2,7 +2,7 @@
   "python.defaultInterpreterPath": "api/env/bin/python",
   "python.languageServer": "Pylance",
   "python.analysis.extraPaths": [
-    "api/tacticalrmm",
+    "api/nativermm",
     "api/env"
   ],
   "python.analysis.diagnosticSeverityOverrides": {
@@ -26,7 +26,7 @@
   ],
   "python.formatting.provider": "black",
   "mypy.targets": [
-    "api/tacticalrmm"
+    "api/nativermm"
   ],
   "mypy.runUsingActiveInterpreter": true,
   "editor.bracketPairColorization.enabled": true,

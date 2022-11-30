@@ -10,7 +10,7 @@ from accounts.models import User
 from agents.models import Agent
 from automation.models import Policy
 from core.models import CoreSettings
-from tacticalrmm.constants import CustomFieldModel, CustomFieldType
+from nativermm.constants import CustomFieldModel, CustomFieldType
 
 if TYPE_CHECKING:
     from checks.models import Check
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 TEST_CACHE = {
     "default": {
-        "BACKEND": "tacticalrmm.cache.TacticalDummyCache",
+        "BACKEND": "nativermm.cache.NativeDummyCache",
     }
 }
 
@@ -46,7 +46,7 @@ TEST_CACHE = {
         ]
     },
 )
-class TacticalTestCase(TestCase):
+class NativeTestCase(TestCase):
     client: APIClient
 
     def authenticate(self) -> None:

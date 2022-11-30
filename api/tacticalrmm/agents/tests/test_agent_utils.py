@@ -3,10 +3,10 @@ from unittest.mock import patch
 from django.conf import settings
 
 from agents.utils import generate_linux_install, get_agent_url
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 
-class TestAgentUtils(TacticalTestCase):
+class TestAgentUtils(NativeTestCase):
     def setUp(self) -> None:
         self.authenticate()
         self.setup_coresettings()
@@ -17,7 +17,7 @@ class TestAgentUtils(TacticalTestCase):
 
         # test without token
         r = get_agent_url(goarch="amd64", plat="windows", token="")
-        expected = f"https://github.com/amidaware/rmmagent/releases/download/v{ver}/tacticalagent-v{ver}-windows-amd64.exe"
+        expected = f"https://github.com/nativeit/rmmagent/releases/download/v{ver}/nativeagent-v{ver}-windows-amd64.exe"
         self.assertEqual(r, expected)
 
         # test with token

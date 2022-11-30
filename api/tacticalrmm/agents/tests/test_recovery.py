@@ -3,14 +3,14 @@ from unittest.mock import patch
 
 from model_bakery import baker
 
-from tacticalrmm.constants import AgentMonType, AgentPlat
-from tacticalrmm.test import TacticalTestCase
+from nativermm.constants import AgentMonType, AgentPlat
+from nativermm.test import NativeTestCase
 
 if TYPE_CHECKING:
     from clients.models import Client, Site
 
 
-class TestRecovery(TacticalTestCase):
+class TestRecovery(NativeTestCase):
     def setUp(self) -> None:
         self.authenticate()
         self.setup_coresettings()
@@ -31,7 +31,7 @@ class TestRecovery(TacticalTestCase):
 
         url = f"/agents/{agent.agent_id}/recover/"
 
-        # test successfull tacticalagent recovery
+        # test successfull nativeagent recovery
         data = {"mode": "tacagent"}
         r = self.client.post(url, data, format="json")
         self.assertEqual(r.status_code, 200)

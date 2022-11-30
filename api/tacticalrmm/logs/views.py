@@ -11,10 +11,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from agents.models import Agent
-from tacticalrmm.constants import AGENT_DEFER, PAAction
-from tacticalrmm.helpers import notify_error
-from tacticalrmm.permissions import _audit_log_filter, _has_perm_on_agent
-from tacticalrmm.utils import get_default_timezone
+from nativermm.constants import AGENT_DEFER, PAAction
+from nativermm.helpers import notify_error
+from nativermm.permissions import _audit_log_filter, _has_perm_on_agent
+from nativermm.utils import get_default_timezone
 
 from .models import AuditLog, DebugLog, PendingAction
 from .permissions import AuditLogPerms, DebugLogPerms, PendingActionPerms

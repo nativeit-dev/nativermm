@@ -13,9 +13,9 @@ from rest_framework.views import APIView
 from agents.models import Agent
 from alerts.models import Alert
 from automation.models import Policy
-from tacticalrmm.constants import CheckStatus, CheckType
-from tacticalrmm.helpers import notify_error
-from tacticalrmm.permissions import _has_perm_on_agent
+from nativermm.constants import CheckStatus, CheckType
+from nativermm.helpers import notify_error
+from nativermm.permissions import _has_perm_on_agent
 
 from .models import Check, CheckHistory, CheckResult
 from .permissions import ChecksPerms, RunChecksPerms

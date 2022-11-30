@@ -5,61 +5,61 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # # set env variables
 ENV VIRTUAL_ENV /opt/venv
-ENV TACTICAL_DIR /opt/tactical
-ENV TACTICAL_TMP_DIR /tmp/tactical
+ENV NATIVERMM_DIR /opt/nativermm
+ENV NATIVE_TMP_DIR /tmp/nativermm
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH "${VIRTUAL_ENV}/bin:$PATH"
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
-COPY api/tacticalrmm/requirements.txt ${TACTICAL_TMP_DIR}/api/requirements.txt
+COPY api/nativermm/requirements.txt ${NATIVE_TMP_DIR}/api/requirements.txt
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc libc6-dev && \
-    pip install --upgrade pip && \
-    pip install --no-cache-dir setuptools wheel && \
-    pip install --no-cache-dir -r ${TACTICAL_TMP_DIR}/api/requirements.txt
+apt-get install -y --no-install-recommends gcc libc6-dev && \
+pip install --upgrade pip && \
+pip install --no-cache-dir setuptools wheel && \
+pip install --no-cache-dir -r ${NATIVE_TMP_DIR}/api/requirements.txt
 
 # pulls community scripts from git repo
 FROM python:3.10.8-slim AS GET_SCRIPTS_STAGE
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git && \
-    git clone https://github.com/amidaware/community-scripts.git /community-scripts
+apt-get install -y --no-install-recommends git && \
+git clone https://github.com/nativeit/community-scripts.git /community-scripts
 
 # runtime image
 FROM python:3.10.8-slim
 
 # set env variables
 ENV VIRTUAL_ENV /opt/venv
-ENV TACTICAL_DIR /opt/tactical
-ENV TACTICAL_TMP_DIR /tmp/tactical
-ENV TACTICAL_READY_FILE ${TACTICAL_DIR}/tmp/tactical.ready
-ENV TACTICAL_USER tactical
+ENV NATIVERMM_DIR /opt/nativermm
+ENV NATIVE_TMP_DIR /tmp/nativermm
+ENV NATIVE_READY_FILE ${NATIVERMM_DIR}/tmp/nativermm.ready
+ENV NATIVE_USER nativermm
 ENV PATH "${VIRTUAL_ENV}/bin:$PATH"
 
 # copy files from repo
-COPY api/tacticalrmm ${TACTICAL_TMP_DIR}/api
-COPY --from=GET_SCRIPTS_STAGE /community-scripts ${TACTICAL_TMP_DIR}/community-scripts
+COPY api/nativermm ${NATIVE_TMP_DIR}/api
+COPY --from=GET_SCRIPTS_STAGE /community-scripts ${NATIVE_TMP_DIR}/community-scripts
 
 # copy go install from build stage
 COPY --from=CREATE_VENV_STAGE ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 # install deps
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends rsync && \
-    rm -rf /var/lib/apt/lists/* && \
-    groupadd -g 1000 "${TACTICAL_USER}" && \
-    useradd -M -d "${TACTICAL_DIR}" -s /bin/bash -u 1000 -g 1000 "${TACTICAL_USER}"
+apt-get upgrade -y && \
+apt-get install -y --no-install-recommends rsync && \
+rm -rf /var/lib/apt/lists/* && \
+groupadd -g 1000 "${NATIVE_USER}" && \
+useradd -M -d "${NATIVERMM_DIR}" -s /bin/bash -u 1000 -g 1000 "${NATIVE_USER}"
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 # docker init
-COPY docker/containers/tactical/entrypoint.sh /
+COPY docker/containers/nativermm/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-WORKDIR ${TACTICAL_DIR}/api
+WORKDIR ${NATIVERMM_DIR}/api
 
 EXPOSE 8080 4443 8383

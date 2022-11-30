@@ -8,7 +8,7 @@ from packaging import version as pyver
 from agents.models import Agent
 from agents.tasks import auto_self_agent_update_task, send_agent_update_task
 from logs.models import PendingAction
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AGENT_DEFER,
     AgentMonType,
     AgentPlat,
@@ -16,10 +16,10 @@ from tacticalrmm.constants import (
     PAAction,
     PAStatus,
 )
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 
-class TestAgentUpdate(TacticalTestCase):
+class TestAgentUpdate(NativeTestCase):
     def setUp(self) -> None:
         self.authenticate()
         self.setup_coresettings()
@@ -128,7 +128,7 @@ class TestAgentUpdate(TacticalTestCase):
                 "payload": {
                     "url": "https://example.com/123",
                     "version": settings.LATEST_AGENT_VER,
-                    "inno": f"tacticalagent-v{settings.LATEST_AGENT_VER}-windows-amd64.exe",
+                    "inno": f"nativeagent-v{settings.LATEST_AGENT_VER}-windows-amd64.exe",
                 },
             },
             wait=False,
@@ -139,7 +139,7 @@ class TestAgentUpdate(TacticalTestCase):
         self.assertEqual(action1.details["url"], "https://example.com/123")
         self.assertEqual(
             action1.details["inno"],
-            f"tacticalagent-v{settings.LATEST_AGENT_VER}-windows-amd64.exe",
+            f"nativeagent-v{settings.LATEST_AGENT_VER}-windows-amd64.exe",
         )
         self.assertEqual(action1.details["version"], settings.LATEST_AGENT_VER)
 
@@ -153,7 +153,7 @@ class TestAgentUpdate(TacticalTestCase):
                 "payload": {
                     "url": "https://example.com/123",
                     "version": settings.LATEST_AGENT_VER,
-                    "inno": f"tacticalagent-v{settings.LATEST_AGENT_VER}-linux-arm.exe",
+                    "inno": f"nativeagent-v{settings.LATEST_AGENT_VER}-linux-arm.exe",
                 },
             },
             wait=False,
@@ -164,7 +164,7 @@ class TestAgentUpdate(TacticalTestCase):
         self.assertEqual(action2.details["url"], "https://example.com/123")
         self.assertEqual(
             action2.details["inno"],
-            f"tacticalagent-v{settings.LATEST_AGENT_VER}-linux-arm.exe",
+            f"nativeagent-v{settings.LATEST_AGENT_VER}-linux-arm.exe",
         )
         self.assertEqual(action2.details["version"], settings.LATEST_AGENT_VER)
 

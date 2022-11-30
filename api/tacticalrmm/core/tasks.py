@@ -15,8 +15,8 @@ from clients.models import Client, Site
 from core.utils import get_core_settings
 from logs.models import PendingAction
 from logs.tasks import prune_audit_log, prune_debug_log
-from tacticalrmm.celery import app
-from tacticalrmm.constants import (
+from nativermm.celery import app
+from nativermm.constants import (
     AGENT_DEFER,
     AGENT_STATUS_ONLINE,
     AGENT_STATUS_OVERDUE,

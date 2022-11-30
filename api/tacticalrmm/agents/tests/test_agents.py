@@ -16,7 +16,7 @@ from agents.serializers import (
     AgentNoteSerializer,
     AgentSerializer,
 )
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AGENT_STATUS_OFFLINE,
     AGENT_STATUS_ONLINE,
     AgentMonType,
@@ -24,7 +24,7 @@ from tacticalrmm.constants import (
     CustomFieldType,
     EvtLogNames,
 )
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 from winupdate.models import WinUpdatePolicy
 from winupdate.serializers import WinUpdatePolicySerializer
 
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 base_url = "/agents"
 
 
-class TestAgentsList(TacticalTestCase):
+class TestAgentsList(NativeTestCase):
     def setUp(self) -> None:
         self.authenticate()
         self.setup_coresettings()
@@ -102,7 +102,7 @@ class TestAgentsList(TacticalTestCase):
         self.check_not_authenticated("get", url)
 
 
-class TestAgentViews(TacticalTestCase):
+class TestAgentViews(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -303,7 +303,7 @@ class TestAgentViews(TacticalTestCase):
         url = f"{base_url}/{agent.agent_id}/processes/"
 
         with open(
-            os.path.join(settings.BASE_DIR, "tacticalrmm/test_data/procs.json")
+            os.path.join(settings.BASE_DIR, "nativermm/test_data/procs.json")
         ) as f:
             mock_ret.return_value = json.load(f)
 
@@ -341,7 +341,7 @@ class TestAgentViews(TacticalTestCase):
         url = f"/agents/{self.agent.agent_id}/eventlog/Application/22/"
 
         with open(
-            os.path.join(settings.BASE_DIR, "tacticalrmm/test_data/appeventlog.json")
+            os.path.join(settings.BASE_DIR, "nativermm/test_data/appeventlog.json")
         ) as f:
             nats_cmd.return_value = json.load(f)
 
@@ -854,7 +854,7 @@ class TestAgentViews(TacticalTestCase):
         self.assertEqual(r.data, data)  # type:ignore
 
 
-class TestAgentViewsNew(TacticalTestCase):
+class TestAgentViewsNew(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -888,7 +888,7 @@ class TestAgentViewsNew(TacticalTestCase):
         self.check_not_authenticated("post", url)
 
 
-class TestAgentPermissions(TacticalTestCase):
+class TestAgentPermissions(NativeTestCase):
     def setUp(self):
         self.setup_client()
         self.setup_coresettings()
@@ -1312,7 +1312,7 @@ class TestAgentPermissions(TacticalTestCase):
         self.check_authorized_superuser("get", unauthorized_url)
 
 
-class TestAgentTasks(TacticalTestCase):
+class TestAgentTasks(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()

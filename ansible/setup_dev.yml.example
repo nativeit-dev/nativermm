@@ -1,7 +1,7 @@
 ---
 - hosts: "{{ target }}"
   vars:
-    ansible_user: tactical
+    ansible_user: nativermm
     fullchain_src: /path/to/fullchain.pem
     privkey_src: /path/to/privkey.pem
     api: "api.example.com"
@@ -17,4 +17,4 @@
     django_user: "changeme"
     django_password: "changeme"
   roles:
-    - trmm_dev
+    - nativermm_dev

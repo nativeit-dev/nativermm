@@ -17,7 +17,7 @@ from clients.models import Client, Site
 from logs.models import AuditLog, PendingAction
 from scripts.models import Script
 from software.models import InstalledSoftware
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AgentHistoryType,
     AgentMonType,
     AgentPlat,
@@ -33,7 +33,7 @@ from tacticalrmm.constants import (
     TaskSyncStatus,
     TaskType,
 )
-from tacticalrmm.demo_data import (
+from nativermm.demo_data import (
     check_network_loc_aware_ps1,
     check_storage_pool_health_ps1,
     clear_print_spool_bat,
@@ -55,15 +55,15 @@ from winupdate.models import WinUpdate, WinUpdatePolicy
 
 AGENTS_TO_GENERATE = 250
 
-SVCS = settings.BASE_DIR.joinpath("tacticalrmm/test_data/winsvcs.json")
-WMI_1 = settings.BASE_DIR.joinpath("tacticalrmm/test_data/wmi1.json")
-WMI_2 = settings.BASE_DIR.joinpath("tacticalrmm/test_data/wmi2.json")
-WMI_3 = settings.BASE_DIR.joinpath("tacticalrmm/test_data/wmi3.json")
-SW_1 = settings.BASE_DIR.joinpath("tacticalrmm/test_data/software1.json")
-SW_2 = settings.BASE_DIR.joinpath("tacticalrmm/test_data/software2.json")
-WIN_UPDATES = settings.BASE_DIR.joinpath("tacticalrmm/test_data/winupdates.json")
+SVCS = settings.BASE_DIR.joinpath("nativermm/test_data/winsvcs.json")
+WMI_1 = settings.BASE_DIR.joinpath("nativermm/test_data/wmi1.json")
+WMI_2 = settings.BASE_DIR.joinpath("nativermm/test_data/wmi2.json")
+WMI_3 = settings.BASE_DIR.joinpath("nativermm/test_data/wmi3.json")
+SW_1 = settings.BASE_DIR.joinpath("nativermm/test_data/software1.json")
+SW_2 = settings.BASE_DIR.joinpath("nativermm/test_data/software2.json")
+WIN_UPDATES = settings.BASE_DIR.joinpath("nativermm/test_data/winupdates.json")
 EVT_LOG_FAIL = settings.BASE_DIR.joinpath(
-    "tacticalrmm/test_data/eventlog_check_fail.json"
+    "nativermm/test_data/eventlog_check_fail.json"
 )
 
 
@@ -831,7 +831,7 @@ class Command(BaseCommand):
 
                     obj = dt.datetime.strptime(date_obj, "%Y-%m-%d %H:%M")
 
-                    task_name = "TacticalRMM_SchedReboot_" + "".join(
+                    task_name = "NativeRMM_SchedReboot_" + "".join(
                         random.choice(string.ascii_letters) for _ in range(10)
                     )
 

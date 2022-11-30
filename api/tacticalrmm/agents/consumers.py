@@ -3,8 +3,8 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import get_object_or_404
-from tacticalrmm.constants import AGENT_DEFER, AgentHistoryType
-from tacticalrmm.permissions import _has_perm_on_agent
+from nativermm.constants import AGENT_DEFER, AgentHistoryType
+from nativermm.permissions import _has_perm_on_agent
 
 
 class SendCMD(AsyncJsonWebsocketConsumer):

@@ -9,14 +9,14 @@ from django.db.models.fields import BooleanField, PositiveIntegerField
 from django.utils import timezone as djangotime
 
 from logs.models import BaseAuditModel, DebugLog
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AgentMonType,
     AlertSeverity,
     AlertType,
     CheckType,
     DebugLogType,
 )
-from tacticalrmm.models import PermissionQuerySet
+from nativermm.models import PermissionQuerySet
 
 if TYPE_CHECKING:
     from agents.models import Agent

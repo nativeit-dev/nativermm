@@ -6,8 +6,8 @@ from django.conf import settings
 from ipware import get_client_ip
 from rest_framework.exceptions import AuthenticationFailed
 
-from tacticalrmm.constants import DEMO_NOT_ALLOWED
-from tacticalrmm.helpers import notify_error
+from nativermm.constants import DEMO_NOT_ALLOWED
+from nativermm.helpers import notify_error
 
 request_local = threading.local()
 

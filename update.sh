@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 SCRIPT_VERSION="140"
-SCRIPT_URL='https://raw.githubusercontent.com/amidaware/tacticalrmm/master/update.sh'
-LATEST_SETTINGS_URL='https://raw.githubusercontent.com/amidaware/tacticalrmm/master/api/tacticalrmm/tacticalrmm/settings.py'
+SCRIPT_URL='https://raw.githubusercontent.com/nativeit/nativermm/master/update.sh'
+LATEST_SETTINGS_URL='https://raw.githubusercontent.com/nativeit/nativermm/master/api/nativermm/nativermm/settings.py'
 YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 THIS_SCRIPT=$(readlink -f "$0")
 
-SCRIPTS_DIR='/opt/trmm-community-scripts'
+SCRIPTS_DIR='/opt/nativermm-community-scripts'
 PYTHON_VER='3.10.8'
-SETTINGS_FILE='/rmm/api/tacticalrmm/tacticalrmm/settings.py'
+SETTINGS_FILE='/rmm/api/nativermm/nativermm/settings.py'
 
 TMP_FILE=$(mktemp -p "" "rmmupdate_XXXXXXXXXX")
 curl -s -L "${SCRIPT_URL}" > ${TMP_FILE}
@@ -48,11 +48,11 @@ fi
 TMP_SETTINGS=$(mktemp -p "" "rmmsettings_XXXXXXXXXX")
 curl -s -L "${LATEST_SETTINGS_URL}" > ${TMP_SETTINGS}
 
-LATEST_TRMM_VER=$(grep "^TRMM_VERSION" "$TMP_SETTINGS" | awk -F'[= "]' '{print $5}')
-CURRENT_TRMM_VER=$(grep "^TRMM_VERSION" "$SETTINGS_FILE" | awk -F'[= "]' '{print $5}')
+LATEST_NATIVERMM_VER=$(grep "^NATIVERMM_VERSION" "$TMP_SETTINGS" | awk -F'[= "]' '{print $5}')
+CURRENT_NATIVERMM_VER=$(grep "^NATIVERMM_VERSION" "$SETTINGS_FILE" | awk -F'[= "]' '{print $5}')
 
-if [[ "${CURRENT_TRMM_VER}" == "${LATEST_TRMM_VER}" ]] && ! [[ "$force" = true ]]; then
-  printf >&2 "${GREEN}Already on latest version. Current version: ${CURRENT_TRMM_VER} Latest version: ${LATEST_TRMM_VER}${NC}\n"
+if [[ "${CURRENT_NATIVERMM_VER}" == "${LATEST_NATIVERMM_VER}" ]] && ! [[ "$force" = true ]]; then
+  printf >&2 "${GREEN}Already on latest version. Current version: ${CURRENT_NATIVERMM_VER} Latest version: ${LATEST_NATIVERMM_VER}${NC}\n"
   rm -f $TMP_SETTINGS
   exit 0
 fi
@@ -81,7 +81,7 @@ After=network.target
 [Service]
 PrivateTmp=true
 Type=simple
-ExecStart=/usr/local/bin/nats-server -c /rmm/api/tacticalrmm/nats-rmm.conf
+ExecStart=/usr/local/bin/nats-server -c /rmm/api/nativermm/nats-rmm.conf
 ExecReload=/usr/bin/kill -s HUP \$MAINPID
 ExecStop=/usr/bin/kill -s SIGINT \$MAINPID
 User=${USER}
@@ -140,9 +140,9 @@ After=network.target
 [Service]
 User=${USER}
 Group=www-data
-WorkingDirectory=/rmm/api/tacticalrmm
+WorkingDirectory=/rmm/api/nativermm
 Environment="PATH=/rmm/api/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-ExecStart=/rmm/api/env/bin/daphne -u /rmm/daphne.sock tacticalrmm.asgi:application
+ExecStart=/rmm/api/env/bin/daphne -u /rmm/daphne.sock nativermm.asgi:application
 ExecStartPre=rm -f /rmm/daphne.sock
 ExecStartPre=rm -f /rmm/daphne.sock.lock
 Restart=always
@@ -278,7 +278,7 @@ git pull
 if [[ ! -d ${SCRIPTS_DIR} ]]; then
   sudo mkdir -p ${SCRIPTS_DIR}
   sudo chown ${USER}:${USER} ${SCRIPTS_DIR}
-  git clone https://github.com/amidaware/community-scripts.git ${SCRIPTS_DIR}/
+  git clone https://github.com/nativeit/community-scripts.git ${SCRIPTS_DIR}/
   cd ${SCRIPTS_DIR}
   git config user.email "admin@example.com"
   git config user.name "Bob"
@@ -308,13 +308,13 @@ if ! [[ $CHECK_CELERY_CONFIG ]]; then
   sed -i 's/CELERYD_OPTS=.*/CELERYD_OPTS="--time-limit=86400 --autoscale=20,2"/g' /etc/conf.d/celery.conf
 fi
 
-CHECK_ADMIN_ENABLED=$(grep ADMIN_ENABLED /rmm/api/tacticalrmm/tacticalrmm/local_settings.py)
+CHECK_ADMIN_ENABLED=$(grep ADMIN_ENABLED /rmm/api/nativermm/nativermm/local_settings.py)
 if ! [[ $CHECK_ADMIN_ENABLED ]]; then
 adminenabled="$(cat << EOF
 ADMIN_ENABLED = False
 EOF
 )"
-echo "${adminenabled}" | tee --append /rmm/api/tacticalrmm/tacticalrmm/local_settings.py > /dev/null
+echo "${adminenabled}" | tee --append /rmm/api/nativermm/nativermm/local_settings.py > /dev/null
 fi
 
 sudo cp /rmm/natsapi/bin/nats-api /usr/local/bin
@@ -326,18 +326,18 @@ if [[ "${CURRENT_PIP_VER}" != "${LATEST_PIP_VER}" ]] || [[ "$force" = true ]]; t
   cd /rmm/api
   python3.10 -m venv env
   source /rmm/api/env/bin/activate
-  cd /rmm/api/tacticalrmm
+  cd /rmm/api/nativermm
   pip install --no-cache-dir --upgrade pip
   pip install --no-cache-dir setuptools==${SETUPTOOLS_VER} wheel==${WHEEL_VER}
   pip install --no-cache-dir -r requirements.txt
 else
   source /rmm/api/env/bin/activate
-  cd /rmm/api/tacticalrmm
+  cd /rmm/api/nativermm
   pip install -r requirements.txt
 fi
 
 python manage.py pre_update_tasks
-celery -A tacticalrmm purge -f
+celery -A nativermm purge -f
 python manage.py migrate
 python manage.py delete_tokens
 python manage.py collectstatic --no-input
@@ -359,8 +359,8 @@ if [ ! -d /var/www/rmm ]; then
   sudo mkdir -p /var/www/rmm
 fi
 
-webtar="trmm-web-v${WEB_VERSION}.tar.gz"
-wget -q https://github.com/amidaware/tacticalrmm-web/releases/download/v${WEB_VERSION}/${webtar} -O /tmp/${webtar}
+webtar="nativermm-web-v${WEB_VERSION}.tar.gz"
+wget -q https://github.com/nativeit/nativermm-web/releases/download/v${WEB_VERSION}/${webtar} -O /tmp/${webtar}
 sudo rm -rf /var/www/rmm/dist
 sudo tar -xzf /tmp/${webtar} -C /var/www/rmm
 echo "window._env_ = {PROD_URL: \"https://${API}\"}" | sudo tee /var/www/rmm/dist/env-config.js > /dev/null
@@ -374,7 +374,7 @@ sudo systemctl start ${i}
 done
 
 sleep 1
-/rmm/api/env/bin/python /rmm/api/tacticalrmm/manage.py update_agents
+/rmm/api/env/bin/python /rmm/api/nativermm/manage.py update_agents
 
 CURRENT_MESH_VER=$(cd /meshcentral/node_modules/meshcentral && node -p -e "require('./package.json').version")
 if [[ "${CURRENT_MESH_VER}" != "${LATEST_MESH_VER}" ]] || [[ "$force" = true ]]; then

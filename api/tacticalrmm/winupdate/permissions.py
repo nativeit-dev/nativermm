@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from tacticalrmm.permissions import _has_perm, _has_perm_on_agent
+from nativermm.permissions import _has_perm, _has_perm_on_agent
 
 
 class AgentWinUpdatePerms(permissions.BasePermission):

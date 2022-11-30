@@ -3,13 +3,13 @@ from unittest.mock import patch
 from django.test import override_settings
 from model_bakery import baker
 
-from tacticalrmm.constants import (
+from nativermm.constants import (
     CustomFieldModel,
     CustomFieldType,
     ScriptShell,
     ScriptType,
 )
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 from .models import Script, ScriptSnippet
 from .serializers import (
@@ -19,7 +19,7 @@ from .serializers import (
 )
 
 
-class TestScriptViews(TacticalTestCase):
+class TestScriptViews(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.authenticate()
@@ -436,7 +436,7 @@ class TestScriptViews(TacticalTestCase):
         )
 
 
-class TestScriptSnippetViews(TacticalTestCase):
+class TestScriptSnippetViews(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.authenticate()

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	"github.com/amidaware/tacticalrmm/natsapi"
+	"github.com/nativeit/nativermm/natsapi"
 	"github.com/sirupsen/logrus"
 )
 

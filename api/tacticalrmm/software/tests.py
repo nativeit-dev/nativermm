@@ -5,7 +5,7 @@ from unittest.mock import patch
 from django.conf import settings
 from model_bakery import baker
 
-from tacticalrmm.test import TacticalTestCase
+from nativermm.test import NativeTestCase
 
 from .models import ChocoSoftware
 from .serializers import InstalledSoftwareSerializer
@@ -13,7 +13,7 @@ from .serializers import InstalledSoftwareSerializer
 base_url = "/software"
 
 
-class TestSoftwareViews(TacticalTestCase):
+class TestSoftwareViews(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -119,7 +119,7 @@ class TestSoftwareViews(TacticalTestCase):
         self.assertEqual(r.status_code, 400)
 
         with open(
-            os.path.join(settings.BASE_DIR, "tacticalrmm/test_data/software1.json")
+            os.path.join(settings.BASE_DIR, "nativermm/test_data/software1.json")
         ) as f:
             sw = json.load(f)
 
@@ -136,7 +136,7 @@ class TestSoftwareViews(TacticalTestCase):
         self.check_not_authenticated("put", url)
 
 
-class TestSoftwarePermissions(TacticalTestCase):
+class TestSoftwarePermissions(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.setup_client()

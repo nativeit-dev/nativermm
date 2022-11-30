@@ -7,10 +7,10 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	nativermm "github.com/nativeit/nativermm-shared"
 	nats "github.com/nats-io/nats.go"
 	"github.com/sirupsen/logrus"
 	"github.com/ugorji/go/codec"
-	trmm "github.com/wh1te909/trmm-shared"
 )
 
 func Svc(logger *logrus.Logger, cfg string) {
@@ -35,7 +35,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 		switch msg.Reply {
 		case "agent-hello":
 			go func() {
-				var p trmm.CheckInNats
+				var p nativermm.CheckInNats
 				if err := dec.Decode(&p); err == nil {
 					loc, _ := time.LoadLocation("UTC")
 					now := time.Now().In(loc)
@@ -55,7 +55,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-publicip":
 			go func() {
-				var p trmm.PublicIPNats
+				var p nativermm.PublicIPNats
 				if err := dec.Decode(&p); err == nil {
 					logger.Debugln("Public IP", p)
 					stmt := `
@@ -69,7 +69,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-agentinfo":
 			go func() {
-				var r trmm.AgentInfoNats
+				var r nativermm.AgentInfoNats
 				if err := dec.Decode(&r); err == nil {
 					stmt := `
 						UPDATE agents_agent
@@ -96,7 +96,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-disks":
 			go func() {
-				var r trmm.WinDisksNats
+				var r nativermm.WinDisksNats
 				if err := dec.Decode(&r); err == nil {
 					logger.Debugln("Disks", r)
 					b, err := json.Marshal(r.Disks)
@@ -116,7 +116,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-winsvc":
 			go func() {
-				var r trmm.WinSvcNats
+				var r nativermm.WinSvcNats
 				if err := dec.Decode(&r); err == nil {
 					logger.Debugln("WinSvc", r)
 					b, err := json.Marshal(r.WinSvcs)
@@ -137,7 +137,7 @@ func Svc(logger *logrus.Logger, cfg string) {
 
 		case "agent-wmi":
 			go func() {
-				var r trmm.WinWMINats
+				var r nativermm.WinWMINats
 				if err := dec.Decode(&r); err == nil {
 					logger.Debugln("WMI", r)
 					b, err := json.Marshal(r.WMI)

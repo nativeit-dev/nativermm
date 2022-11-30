@@ -6,7 +6,7 @@ set -e
 : "${MESH_PASS:=meshcentralpass}"
 : "${MONGODB_USER:=mongouser}"
 : "${MONGODB_PASSWORD:=mongopass}"
-: "${MONGODB_HOST:=tactical-mongodb}"
+: "${MONGODB_HOST:=nativermm-mongodb}"
 : "${MONGODB_PORT:=27017}"
 : "${NGINX_HOST_IP:=172.20.0.20}"
 : "${NGINX_HOST_PORT:=4443}"
@@ -52,8 +52,8 @@ if [ ! -f "/home/node/app/meshcentral-data/config.json" ] || [[ "${MESH_PERSISTE
   },
   "domains": {
     "": {
-      "title": "Tactical RMM",
-      "title2": "TacticalRMM",
+      "title": "Native RMM",
+      "title2": "NativeRMM",
       "newAccounts": false,
       "mstsc": true,
       "geoLocation": true,
@@ -79,11 +79,11 @@ fi
 node node_modules/meshcentral --createaccount ${MESH_USER} --pass ${MESH_PASS} --email example@example.com
 node node_modules/meshcentral --adminaccount ${MESH_USER}
 
-if [ ! -f "${TACTICAL_DIR}/tmp/mesh_token" ]; then
+if [ ! -f "${NATIVERMM_DIR}/tmp/mesh_token" ]; then
     mesh_token=$(node node_modules/meshcentral --logintokenkey)
 
     if [[ ${#mesh_token} -eq 160 ]]; then
-      echo ${mesh_token} > /opt/tactical/tmp/mesh_token
+      echo ${mesh_token} > /opt/nativermm/tmp/mesh_token
     else
       echo "Failed to generate mesh token. Fix the error and restart the mesh container"
     fi

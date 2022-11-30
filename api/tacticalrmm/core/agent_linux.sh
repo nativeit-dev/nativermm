@@ -23,12 +23,12 @@ agentType='agentTypeChange'
 proxy=''
 
 agentBinPath='/usr/local/bin'
-binName='tacticalagent'
+binName='nativeagent'
 agentBin="${agentBinPath}/${binName}"
-agentConf='/etc/tacticalagent'
-agentSvcName='tacticalagent.service'
+agentConf='/etc/nativeagent'
+agentSvcName='nativeagent.service'
 agentSysD="/etc/systemd/system/${agentSvcName}"
-meshDir='/opt/tacticalmesh'
+meshDir='/opt/nativemesh'
 meshSystemBin="${meshDir}/meshagent"
 meshSvcName='meshagent.service'
 meshSysD="/lib/systemd/system/${meshSvcName}"
@@ -120,10 +120,10 @@ fi
 
 RemoveOldAgent
 
-echo "Downloading tactical agent..."
+echo "Downloading nativermm agent..."
 wget -q -O ${agentBin} "${agentDL}"
 if [ $? -ne 0 ]; then
-    echo "ERROR: Unable to download tactical agent"
+    echo "ERROR: Unable to download nativermm agent"
     exit 1
 fi
 chmod +x ${agentBin}
@@ -164,9 +164,9 @@ fi
 
 eval ${INSTALL_CMD}
 
-tacticalsvc="$(cat << EOF
+nativesvc="$(cat << EOF
 [Unit]
-Description=Tactical RMM Linux Agent
+Description=Native RMM Linux Agent
 
 [Service]
 Type=simple
@@ -182,7 +182,7 @@ KillMode=process
 WantedBy=multi-user.target
 EOF
 )"
-echo "${tacticalsvc}" | tee ${agentSysD} > /dev/null
+echo "${nativesvc}" | tee ${agentSysD} > /dev/null
 
 systemctl daemon-reload
 systemctl enable --now ${agentSvcName}

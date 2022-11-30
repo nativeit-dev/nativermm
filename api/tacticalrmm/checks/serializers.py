@@ -4,7 +4,7 @@ from rest_framework import serializers
 from autotasks.models import AutomatedTask
 from scripts.models import Script
 from scripts.serializers import ScriptCheckSerializer
-from tacticalrmm.constants import CheckType
+from nativermm.constants import CheckType
 
 from .models import Check, CheckHistory, CheckResult
 

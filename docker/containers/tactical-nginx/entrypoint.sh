@@ -6,15 +6,15 @@ set -e
 : "${APP_PORT:=8080}"
 : "${API_PORT:=8080}"
 : "${NGINX_RESOLVER:=127.0.0.11}"
-: "${BACKEND_SERVICE:=tactical-backend}"
-: "${FRONTEND_SERVICE:=tactical-frontend}"
-: "${MESH_SERVICE:=tactical-meshcentral}"
-: "${WEBSOCKETS_SERVICE:=tactical-websockets}"
-: "${NATS_SERVICE:=tactical-nats}"
+: "${BACKEND_SERVICE:=nativermm-backend}"
+: "${FRONTEND_SERVICE:=nativermm-frontend}"
+: "${MESH_SERVICE:=nativermm-meshcentral}"
+: "${WEBSOCKETS_SERVICE:=nativermm-websockets}"
+: "${NATS_SERVICE:=nativermm-nats}"
 : "${DEV:=0}"
 
-: "${CERT_PRIV_PATH:=${TACTICAL_DIR}/certs/privkey.pem}"
-: "${CERT_PUB_PATH:=${TACTICAL_DIR}/certs/fullchain.pem}"
+: "${CERT_PRIV_PATH:=${NATIVERMM_DIR}/certs/privkey.pem}"
+: "${CERT_PUB_PATH:=${NATIVERMM_DIR}/certs/fullchain.pem}"
 
 # remove default config
 rm -f /etc/nginx/conf.d/default.conf
@@ -76,13 +76,13 @@ server  {
     }
 
     location /static/ {
-        root ${TACTICAL_DIR}/api;
+        root ${NATIVERMM_DIR}/api;
     }
 
     location /private/ {
         internal;
         add_header "Access-Control-Allow-Origin" "https://${APP_HOST}";
-        alias ${TACTICAL_DIR}/api/tacticalrmm/private/;
+        alias ${NATIVERMM_DIR}/api/nativermm/private/;
     }
 
     location ~ ^/ws/ {

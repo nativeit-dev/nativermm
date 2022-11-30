@@ -2,30 +2,30 @@ version: '3.4'
 
 services:
   api-dev:
-    container_name: trmm-api-dev
+    container_name: nativermm-api-dev
     image: api-dev
     restart: always
     user: 1000:1000
     build:
       context: ..
       dockerfile: .devcontainer/api.dockerfile
-    command: [ "tactical-api" ]
+    command: [ "nativermm-api" ]
     environment:
       API_PORT: ${API_PORT}
     ports:
       - "8000:${API_PORT}"
     volumes:
-      - tactical-data-dev:/opt/tactical
+      - nativermm-data-dev:/opt/nativermm
       - ..:/workspace:cached
     networks:
       dev:
         aliases:
-          - tactical-backend
+          - nativermm-backend
 
   # nats
   nats-dev:
-    container_name: trmm-nats-dev
-    image: ${IMAGE_REPO}tactical-nats:${VERSION}
+    container_name: nativermm-nats-dev
+    image: ${IMAGE_REPO}nativermm-nats:${VERSION}
     restart: always
     user: 1000:1000
     environment:
@@ -35,18 +35,18 @@ services:
     ports:
       - "${NATS_PORTS}"
     volumes:
-      - tactical-data-dev:/opt/tactical
+      - nativermm-data-dev:/opt/nativermm
       - ..:/workspace:cached
     networks:
       dev:
         aliases:
           - ${API_HOST}
-          - tactical-nats
+          - nativermm-nats
 
   # meshcentral container
   meshcentral-dev:
-    container_name: trmm-meshcentral-dev
-    image: ${IMAGE_REPO}tactical-meshcentral:${VERSION}
+    container_name: nativermm-meshcentral-dev
+    image: ${IMAGE_REPO}nativermm-meshcentral:${VERSION}
     restart: always
     user: 1000:1000
     environment:
@@ -59,17 +59,17 @@ services:
     networks:
       dev:
         aliases:
-          - tactical-meshcentral
+          - nativermm-meshcentral
           - ${MESH_HOST}
     volumes:
-      - tactical-data-dev:/opt/tactical
+      - nativermm-data-dev:/opt/nativermm
       - mesh-data-dev:/home/node/app/meshcentral-data
     depends_on:
       - mongodb-dev
 
   # mongodb container for meshcentral
   mongodb-dev:
-    container_name: trmm-mongodb-dev
+    container_name: nativermm-mongodb-dev
     image: mongo:4.4
     restart: always
     user: 1000:1000
@@ -80,13 +80,13 @@ services:
     networks:
       dev:
         aliases:
-          - tactical-mongodb
+          - nativermm-mongodb
     volumes:
       - mongo-dev-data:/data/db
 
   # postgres database for api service
   postgres-dev:
-    container_name: trmm-postgres-dev
+    container_name: nativermm-postgres-dev
     image: postgres:13-alpine
     restart: always
     environment:
@@ -98,11 +98,11 @@ services:
     networks:
       dev:
         aliases:
-          - tactical-postgres
+          - nativermm-postgres
 
   # redis container for celery tasks
   redis-dev:
-    container_name: trmm-redis-dev
+    container_name: nativermm-redis-dev
     restart: always
     user: 1000:1000
     command: redis-server
@@ -112,13 +112,13 @@ services:
     networks:
       dev:
         aliases:
-          - tactical-redis
+          - nativermm-redis
 
   init-dev:
-    container_name: trmm-init-dev
+    container_name: nativermm-init-dev
     image: api-dev
     restart: on-failure
-    command: [ "tactical-init-dev" ]
+    command: [ "nativermm-init-dev" ]
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASS: ${POSTGRES_PASS}
@@ -126,8 +126,8 @@ services:
       API_HOST: ${API_HOST}
       MESH_HOST: ${MESH_HOST}
       MESH_USER: ${MESH_USER}
-      TRMM_USER: ${TRMM_USER}
-      TRMM_PASS: ${TRMM_PASS}
+      NATIVERMM_USER: ${NATIVERMM_USER}
+      NATIVERMM_PASS: ${NATIVERMM_PASS}
       HTTP_PROTOCOL: ${HTTP_PROTOCOL}
       APP_PORT: ${APP_PORT}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -137,7 +137,7 @@ services:
     networks:
       - dev
     volumes:
-      - tactical-data-dev:/opt/tactical
+      - nativermm-data-dev:/opt/nativermm
       - mesh-data-dev:/meshcentral-data
       - redis-data-dev:/redis/data
       - mongo-dev-data:/mongo/data/db
@@ -145,15 +145,15 @@ services:
 
   # container for celery worker service
   celery-dev:
-    container_name: trmm-celery-dev
+    container_name: nativermm-celery-dev
     image: api-dev
-    command: [ "tactical-celery-dev" ]
+    command: [ "nativermm-celery-dev" ]
     restart: always
     user: 1000:1000
     networks:
       - dev
     volumes:
-      - tactical-data-dev:/opt/tactical
+      - nativermm-data-dev:/opt/nativermm
       - ..:/workspace:cached
     depends_on:
       - postgres-dev
@@ -161,15 +161,15 @@ services:
 
   # container for celery beat service
   celerybeat-dev:
-    container_name: trmm-celerybeat-dev
+    container_name: nativermm-celerybeat-dev
     image: api-dev
-    command: [ "tactical-celerybeat-dev" ]
+    command: [ "nativermm-celerybeat-dev" ]
     restart: always
     user: 1000:1000
     networks:
       - dev
     volumes:
-      - tactical-data-dev:/opt/tactical
+      - nativermm-data-dev:/opt/nativermm
       - ..:/workspace:cached
     depends_on:
       - postgres-dev
@@ -177,26 +177,26 @@ services:
 
   # container for websockets communication
   websockets-dev:
-    container_name: trmm-websockets-dev
+    container_name: nativermm-websockets-dev
     image: api-dev
-    command: [ "tactical-websockets-dev" ]
+    command: [ "nativermm-websockets-dev" ]
     restart: always
     user: 1000:1000
     networks:
       dev:
         aliases:
-          - tactical-websockets
+          - nativermm-websockets
     volumes:
-      - tactical-data-dev:/opt/tactical
+      - nativermm-data-dev:/opt/nativermm
       - ..:/workspace:cached
     depends_on:
       - postgres-dev
       - redis-dev
 
-  # container for tactical reverse proxy
+  # container for nativermm reverse proxy
   nginx-dev:
-    container_name: trmm-nginx-dev
-    image: ${IMAGE_REPO}tactical-nginx:${VERSION}
+    container_name: nativermm-nginx-dev
+    image: ${IMAGE_REPO}nativermm-nginx:${VERSION}
     restart: always
     user: 1000:1000
     environment:
@@ -215,10 +215,10 @@ services:
       - "80:8080"
       - "443:4443"
     volumes:
-      - tactical-data-dev:/opt/tactical
+      - nativermm-data-dev:/opt/nativermm
 
 volumes:
-  tactical-data-dev: null
+  nativermm-data-dev: null
   postgres-data-dev: null
   mongo-dev-data: null
   mesh-data-dev: null

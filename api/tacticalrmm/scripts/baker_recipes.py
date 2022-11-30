@@ -1,7 +1,7 @@
 from model_bakery.recipe import Recipe
 
-from tacticalrmm.constants import AgentPlat, ScriptShell, ScriptType
-from tacticalrmm.demo_data import (
+from nativermm.constants import AgentPlat, ScriptShell, ScriptType
+from nativermm.demo_data import (
     check_storage_pool_health_ps1,
     clear_print_spool_bat,
     redhat_insights,

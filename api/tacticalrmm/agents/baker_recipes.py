@@ -8,7 +8,7 @@ from django.conf import settings
 from django.utils import timezone as djangotime
 from model_bakery.recipe import Recipe, foreign_key, seq
 
-from tacticalrmm.constants import AgentMonType, AgentPlat
+from nativermm.constants import AgentMonType, AgentPlat
 
 
 def generate_agent_id() -> str:
@@ -20,13 +20,13 @@ site = Recipe("clients.Site")
 
 def get_wmi_data():
     with open(
-        os.path.join(settings.BASE_DIR, "tacticalrmm/test_data/wmi_python_agent.json")
+        os.path.join(settings.BASE_DIR, "nativermm/test_data/wmi_python_agent.json")
     ) as f:
         return json.load(f)
 
 
 def get_win_svcs():
-    svcs = settings.BASE_DIR.joinpath("tacticalrmm/test_data/winsvcs.json")
+    svcs = settings.BASE_DIR.joinpath("nativermm/test_data/winsvcs.json")
     with open(svcs) as f:
         return json.load(f)
 

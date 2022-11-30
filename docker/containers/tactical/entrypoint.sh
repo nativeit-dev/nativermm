@@ -2,54 +2,54 @@
 
 set -e
 
-: "${TRMM_USER:=tactical}"
-: "${TRMM_PASS:=tactical}"
-: "${POSTGRES_HOST:=tactical-postgres}"
+: "${NATIVERMM_USER:=nativermm}"
+: "${NATIVERMM_PASS:=nativermm}"
+: "${POSTGRES_HOST:=nativermm-postgres}"
 : "${POSTGRES_PORT:=5432}"
-: "${POSTGRES_USER:=tactical}"
-: "${POSTGRES_PASS:=tactical}"
-: "${POSTGRES_DB:=tacticalrmm}"
-: "${MESH_SERVICE:=tactical-meshcentral}"
+: "${POSTGRES_USER:=nativermm}"
+: "${POSTGRES_PASS:=nativermm}"
+: "${POSTGRES_DB:=nativermm}"
+: "${MESH_SERVICE:=nativermm-meshcentral}"
 : "${MESH_WS_URL:=ws://${MESH_SERVICE}:4443}"
 : "${MESH_USER:=meshcentral}"
 : "${MESH_PASS:=meshcentralpass}"
-: "${MESH_HOST:=tactical-meshcentral}"
-: "${API_HOST:=tactical-backend}"
-: "${APP_HOST:=tactical-frontend}"
-: "${REDIS_HOST:=tactical-redis}"
+: "${MESH_HOST:=nativermm-meshcentral}"
+: "${API_HOST:=nativermm-backend}"
+: "${APP_HOST:=nativermm-frontend}"
+: "${REDIS_HOST:=nativermm-redis}"
 
-: "${CERT_PRIV_PATH:=${TACTICAL_DIR}/certs/privkey.pem}"
-: "${CERT_PUB_PATH:=${TACTICAL_DIR}/certs/fullchain.pem}"
+: "${CERT_PRIV_PATH:=${NATIVERMM_DIR}/certs/privkey.pem}"
+: "${CERT_PUB_PATH:=${NATIVERMM_DIR}/certs/fullchain.pem}"
 
-function check_tactical_ready {
+function check_native_ready {
   sleep 15
-  until [ -f "${TACTICAL_READY_FILE}" ]; do
+  until [ -f "${NATIVE_READY_FILE}" ]; do
     echo "waiting for init container to finish install or update..."
     sleep 10
   done
 }
 
-# tactical-init
-if [ "$1" = 'tactical-init' ]; then
+# nativermm-init
+if [ "$1" = 'nativermm-init' ]; then
 
-  test -f "${TACTICAL_READY_FILE}" && rm "${TACTICAL_READY_FILE}"
+  test -f "${NATIVE_READY_FILE}" && rm "${NATIVE_READY_FILE}"
 
   # copy container data to volume
-  rsync -a --no-perms --no-owner --delete --exclude "tmp/*" --exclude "certs/*" --exclude="api/tacticalrmm/private/*" "${TACTICAL_TMP_DIR}/" "${TACTICAL_DIR}/"
+  rsync -a --no-perms --no-owner --delete --exclude "tmp/*" --exclude "certs/*" --exclude="api/nativermm/private/*" "${NATIVE_TMP_DIR}/" "${NATIVERMM_DIR}/"
 
   mkdir -p /meshcentral-data
-  mkdir -p ${TACTICAL_DIR}/tmp
-  mkdir -p ${TACTICAL_DIR}/certs
+  mkdir -p ${NATIVERMM_DIR}/tmp
+  mkdir -p ${NATIVERMM_DIR}/certs
   mkdir -p /mongo/data/db
   mkdir -p /redis/data
   touch /meshcentral-data/.initialized && chown -R 1000:1000 /meshcentral-data
-  touch ${TACTICAL_DIR}/tmp/.initialized && chown -R 1000:1000 ${TACTICAL_DIR}
-  touch ${TACTICAL_DIR}/certs/.initialized && chown -R 1000:1000 ${TACTICAL_DIR}/certs
+  touch ${NATIVERMM_DIR}/tmp/.initialized && chown -R 1000:1000 ${NATIVERMM_DIR}
+  touch ${NATIVERMM_DIR}/certs/.initialized && chown -R 1000:1000 ${NATIVERMM_DIR}/certs
   touch /mongo/data/db/.initialized && chown -R 1000:1000 /mongo/data/db
   touch /redis/data/.initialized && chown -R 1000:1000 /redis/data
-  mkdir -p ${TACTICAL_DIR}/api/tacticalrmm/private/exe
-  mkdir -p ${TACTICAL_DIR}/api/tacticalrmm/private/log
-  touch ${TACTICAL_DIR}/api/tacticalrmm/private/log/django_debug.log
+  mkdir -p ${NATIVERMM_DIR}/api/nativermm/private/exe
+  mkdir -p ${NATIVERMM_DIR}/api/nativermm/private/log
+  touch ${NATIVERMM_DIR}/api/nativermm/private/log/django_debug.log
   
   until (echo > /dev/tcp/"${POSTGRES_HOST}"/"${POSTGRES_PORT}") &> /dev/null; do
     echo "waiting for postgresql container to be ready..."
@@ -62,7 +62,7 @@ if [ "$1" = 'tactical-init' ]; then
   done
 
   # configure django settings
-  MESH_TOKEN=$(cat ${TACTICAL_DIR}/tmp/mesh_token)
+  MESH_TOKEN=$(cat ${NATIVERMM_DIR}/tmp/mesh_token)
   ADMINURL=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 70 | head -n 1)
   DJANGO_SEKRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 80 | head -n 1)
   
@@ -76,12 +76,12 @@ DOCKER_BUILD = True
 CERT_FILE = '${CERT_PUB_PATH}'
 KEY_FILE = '${CERT_PRIV_PATH}'
 
-EXE_DIR = '/opt/tactical/api/tacticalrmm/private/exe'
-LOG_DIR = '/opt/tactical/api/tacticalrmm/private/log'
+EXE_DIR = '/opt/nativermm/api/nativermm/private/exe'
+LOG_DIR = '/opt/nativermm/api/nativermm/private/log'
 
-SCRIPTS_DIR = '/opt/tactical/community-scripts'
+SCRIPTS_DIR = '/opt/nativermm/community-scripts'
 
-ALLOWED_HOSTS = ['${API_HOST}', 'tactical-backend']
+ALLOWED_HOSTS = ['${API_HOST}', 'nativermm-backend']
 
 ADMIN_URL = '${ADMINURL}/'
 
@@ -109,7 +109,7 @@ ADMIN_ENABLED = False
 EOF
 )"
 
-  echo "${localvars}" > ${TACTICAL_DIR}/api/tacticalrmm/local_settings.py
+  echo "${localvars}" > ${NATIVERMM_DIR}/api/nativermm/local_settings.py
 
   # run migrations and init scripts
   python manage.py pre_update_tasks
@@ -127,41 +127,41 @@ EOF
 
   # create super user 
   echo "Creating dashboard user if it doesn't exist"
-  echo "from accounts.models import User; User.objects.create_superuser('${TRMM_USER}', 'admin@example.com', '${TRMM_PASS}') if not User.objects.filter(username='${TRMM_USER}').exists() else 0;" | python manage.py shell
+  echo "from accounts.models import User; User.objects.create_superuser('${NATIVERMM_USER}', 'admin@example.com', '${NATIVERMM_PASS}') if not User.objects.filter(username='${NATIVERMM_USER}').exists() else 0;" | python manage.py shell
 
-  # chown everything to tactical user
+  # chown everything to nativermm user
   echo "Updating permissions on files"
-  chown -R "${TACTICAL_USER}":"${TACTICAL_USER}" "${TACTICAL_DIR}"
+  chown -R "${NATIVE_USER}":"${NATIVE_USER}" "${NATIVERMM_DIR}"
 
   # create install ready file
   echo "Creating install ready file"
-  su -c "echo 'tactical-init' > ${TACTICAL_READY_FILE}" "${TACTICAL_USER}"
+  su -c "echo 'nativermm-init' > ${NATIVE_READY_FILE}" "${NATIVE_USER}"
 
 fi
 
 # backend container
-if [ "$1" = 'tactical-backend' ]; then
-  check_tactical_ready
+if [ "$1" = 'nativermm-backend' ]; then
+  check_native_ready
 
-  uwsgi ${TACTICAL_DIR}/api/app.ini
+  uwsgi ${NATIVERMM_DIR}/api/app.ini
 fi
 
-if [ "$1" = 'tactical-celery' ]; then
-  check_tactical_ready
-  celery -A tacticalrmm worker -l info
+if [ "$1" = 'nativermm-celery' ]; then
+  check_native_ready
+  celery -A nativermm worker -l info
 fi
 
-if [ "$1" = 'tactical-celerybeat' ]; then
-  check_tactical_ready
-  test -f "${TACTICAL_DIR}/api/celerybeat.pid" && rm "${TACTICAL_DIR}/api/celerybeat.pid"
-  celery -A tacticalrmm beat -l info
+if [ "$1" = 'nativermm-celerybeat' ]; then
+  check_native_ready
+  test -f "${NATIVERMM_DIR}/api/celerybeat.pid" && rm "${NATIVERMM_DIR}/api/celerybeat.pid"
+  celery -A nativermm beat -l info
 fi
 
 # websocket container
-if [ "$1" = 'tactical-websockets' ]; then
-  check_tactical_ready
+if [ "$1" = 'nativermm-websockets' ]; then
+  check_native_ready
 
-  export DJANGO_SETTINGS_MODULE=tacticalrmm.settings
+  export DJANGO_SETTINGS_MODULE=nativermm.settings
 
-  daphne tacticalrmm.asgi:application --port 8383 -b 0.0.0.0
+  daphne nativermm.asgi:application --port 8383 -b 0.0.0.0
 fi

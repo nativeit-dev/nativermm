@@ -1,7 +1,7 @@
 import pytz
 from rest_framework import serializers
 
-from tacticalrmm.constants import AGENT_STATUS_ONLINE
+from nativermm.constants import AGENT_STATUS_ONLINE
 from winupdate.serializers import WinUpdatePolicySerializer
 
 from .models import Agent, AgentCustomField, AgentHistory, Note

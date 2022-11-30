@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from logs.models import AuditLog
-from tacticalrmm.helpers import notify_error
+from nativermm.helpers import notify_error
 
 from .models import APIKey, Role, User
 from .permissions import AccountsPerms, APIKeyPerms, RolesPerms

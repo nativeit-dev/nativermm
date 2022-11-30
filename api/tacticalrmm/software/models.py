@@ -1,7 +1,7 @@
 from django.db import models
 
 from agents.models import Agent
-from tacticalrmm.models import PermissionQuerySet
+from nativermm.models import PermissionQuerySet
 
 
 class ChocoSoftware(models.Model):

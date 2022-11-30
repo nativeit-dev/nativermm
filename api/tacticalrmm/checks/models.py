@@ -9,7 +9,7 @@ from django.utils import timezone as djangotime
 
 from core.utils import get_core_settings
 from logs.models import BaseAuditModel
-from tacticalrmm.constants import (
+from nativermm.constants import (
     CHECKS_NON_EDITABLE_FIELDS,
     POLICY_CHECK_FIELDS_TO_COPY,
     AlertSeverity,
@@ -19,7 +19,7 @@ from tacticalrmm.constants import (
     EvtLogNames,
     EvtLogTypes,
 )
-from tacticalrmm.models import PermissionQuerySet
+from nativermm.models import PermissionQuerySet
 
 if TYPE_CHECKING:
     from agents.models import Agent  # pragma: no cover

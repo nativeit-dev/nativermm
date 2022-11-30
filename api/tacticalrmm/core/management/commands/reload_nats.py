@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from tacticalrmm.utils import reload_nats
+from nativermm.utils import reload_nats
 
 
 class Command(BaseCommand):

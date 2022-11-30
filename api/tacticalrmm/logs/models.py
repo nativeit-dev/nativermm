@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union, cast
 from django.db import models
 
 from core.utils import get_core_settings
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AuditActionType,
     AuditObjType,
     DebugLogLevel,
@@ -12,8 +12,8 @@ from tacticalrmm.constants import (
     PAAction,
     PAStatus,
 )
-from tacticalrmm.middleware import get_debug_info, get_username
-from tacticalrmm.models import PermissionQuerySet
+from nativermm.middleware import get_debug_info, get_username
+from nativermm.models import PermissionQuerySet
 
 if TYPE_CHECKING:
     from agents.models import Agent

@@ -14,7 +14,7 @@ networks:
 
 # docker managed persistent volumes
 volumes:
-  tactical_data: null
+  native_data: null
   postgres_data: null
   mongo_data: null
   mesh_data: null
@@ -22,12 +22,12 @@ volumes:
 
 services:
   # postgres database for api service
-  tactical-postgres:
-    container_name: trmm-postgres
+  nativermm-postgres:
+    container_name: nativermm-postgres
     image: postgres:13-alpine
     restart: always
     environment:
-      POSTGRES_DB: tacticalrmm
+      POSTGRES_DB: nativermm
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
     volumes:
@@ -36,8 +36,8 @@ services:
       - api-db
 
   # redis container for celery tasks
-  tactical-redis:
-    container_name: trmm-redis
+  nativermm-redis:
+    container_name: nativermm-redis
     image: redis:6.0-alpine
     user: 1000:1000
     command: redis-server
@@ -48,11 +48,11 @@ services:
       - redis
 
   # used to initialize the docker environment
-  tactical-init:
-    container_name: trmm-init
-    image: ${IMAGE_REPO}tactical:${VERSION}
+  nativermm-init:
+    container_name: nativermm-init
+    image: ${IMAGE_REPO}nativermm:${VERSION}
     restart: on-failure
-    command: [ "tactical-init" ]
+    command: [ "nativermm-init" ]
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASS: ${POSTGRES_PASS}
@@ -60,26 +60,26 @@ services:
       API_HOST: ${API_HOST}
       MESH_USER: ${MESH_USER}
       MESH_HOST: ${MESH_HOST}
-      TRMM_USER: ${TRMM_USER}
-      TRMM_PASS: ${TRMM_PASS}
+      NATIVERMM_USER: ${NATIVERMM_USER}
+      NATIVERMM_PASS: ${NATIVERMM_PASS}
     depends_on:
-      - tactical-postgres
-      - tactical-meshcentral
-      - tactical-redis
+      - nativermm-postgres
+      - nativermm-meshcentral
+      - nativermm-redis
     networks:
       - api-db
       - proxy
       - redis
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
       - mesh_data:/meshcentral-data
       - mongo_data:/mongo/data/db
       - redis_data:/redis/data
 
   # nats
-  tactical-nats:
-    container_name: trmm-nats
-    image: ${IMAGE_REPO}tactical-nats:${VERSION}
+  nativermm-nats:
+    container_name: nativermm-nats
+    image: ${IMAGE_REPO}nativermm-nats:${VERSION}
     user: 1000:1000
     restart: always
     environment:
@@ -87,7 +87,7 @@ services:
     ports:
       - "4222:4222"
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
     networks:
       api-db: null
       proxy:
@@ -95,9 +95,9 @@ services:
           - ${API_HOST}
 
   # meshcentral container
-  tactical-meshcentral:
-    container_name: trmm-meshcentral
-    image: ${IMAGE_REPO}tactical-meshcentral:${VERSION}
+  nativermm-meshcentral:
+    container_name: nativermm-meshcentral
+    image: ${IMAGE_REPO}nativermm-meshcentral:${VERSION}
     user: 1000:1000
     restart: always
     environment:
@@ -113,14 +113,14 @@ services:
           - ${MESH_HOST}
       mesh-db: null
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
       - mesh_data:/home/node/app/meshcentral-data
     depends_on:
-      - tactical-mongodb
+      - nativermm-mongodb
 
   # mongodb container for meshcentral
-  tactical-mongodb:
-    container_name: trmm-mongodb
+  nativermm-mongodb:
+    container_name: nativermm-mongodb
     image: mongo:4.4
     user: 1000:1000
     restart: always
@@ -134,55 +134,55 @@ services:
       - mongo_data:/data/db
 
   # container that hosts vue frontend
-  tactical-frontend:
-    container_name: trmm-frontend
-    image: ${IMAGE_REPO}tactical-frontend:${VERSION}
+  nativermm-frontend:
+    container_name: nativermm-frontend
+    image: ${IMAGE_REPO}nativermm-frontend:${VERSION}
     user: 1000:1000
     restart: always
     networks:
       - proxy
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
     environment:
       API_HOST: ${API_HOST}
 
   # container for django backend
-  tactical-backend:
-    container_name: trmm-backend
-    image: ${IMAGE_REPO}tactical:${VERSION}
+  nativermm-backend:
+    container_name: nativermm-backend
+    image: ${IMAGE_REPO}nativermm:${VERSION}
     user: 1000:1000
-    command: [ "tactical-backend" ]
+    command: [ "nativermm-backend" ]
     restart: always
     networks:
       - proxy
       - api-db
       - redis
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
     depends_on:
-      - tactical-postgres
+      - nativermm-postgres
 
   # container for django websockets connections
-  tactical-websockets:
-    container_name: trmm-websockets
-    image: ${IMAGE_REPO}tactical:${VERSION}
+  nativermm-websockets:
+    container_name: nativermm-websockets
+    image: ${IMAGE_REPO}nativermm:${VERSION}
     user: 1000:1000
-    command: [ "tactical-websockets" ]
+    command: [ "nativermm-websockets" ]
     restart: always
     networks:
       - proxy
       - api-db
       - redis
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
     depends_on:
-      - tactical-postgres
-      - tactical-backend
+      - nativermm-postgres
+      - nativermm-backend
 
-  # container for tactical reverse proxy
-  tactical-nginx:
-    container_name: trmm-nginx
-    image: ${IMAGE_REPO}tactical-nginx:${VERSION}
+  # container for nativermm reverse proxy
+  nativermm-nginx:
+    container_name: nativermm-nginx
+    image: ${IMAGE_REPO}nativermm-nginx:${VERSION}
     user: 1000:1000
     restart: always
     environment:
@@ -198,38 +198,38 @@ services:
       - "80:8080"
       - "443:4443"
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
 
   # container for celery worker service
-  tactical-celery:
-    container_name: trmm-celery
-    image: ${IMAGE_REPO}tactical:${VERSION}
+  nativermm-celery:
+    container_name: nativermm-celery
+    image: ${IMAGE_REPO}nativermm:${VERSION}
     user: 1000:1000
-    command: [ "tactical-celery" ]
+    command: [ "nativermm-celery" ]
     restart: always
     networks:
       - redis
       - proxy
       - api-db
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
     depends_on:
-      - tactical-postgres
-      - tactical-redis
+      - nativermm-postgres
+      - nativermm-redis
 
   # container for celery beat service
-  tactical-celerybeat:
-    container_name: trmm-celerybeat
-    image: ${IMAGE_REPO}tactical:${VERSION}
+  nativermm-celerybeat:
+    container_name: nativermm-celerybeat
+    image: ${IMAGE_REPO}nativermm:${VERSION}
     user: 1000:1000
-    command: [ "tactical-celerybeat" ]
+    command: [ "nativermm-celerybeat" ]
     restart: always
     networks:
       - proxy
       - redis
       - api-db
     volumes:
-      - tactical_data:/opt/tactical
+      - native_data:/opt/nativermm
     depends_on:
-      - tactical-postgres
-      - tactical-redis
+      - nativermm-postgres
+      - nativermm-redis

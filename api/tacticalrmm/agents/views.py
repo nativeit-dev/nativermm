@@ -29,7 +29,7 @@ from core.utils import (
 from logs.models import AuditLog, DebugLog, PendingAction
 from scripts.models import Script
 from scripts.tasks import handle_bulk_command_task, handle_bulk_script_task
-from tacticalrmm.constants import (
+from nativermm.constants import (
     AGENT_DEFER,
     AGENT_STATUS_OFFLINE,
     AGENT_STATUS_ONLINE,
@@ -42,13 +42,13 @@ from tacticalrmm.constants import (
     EvtLogNames,
     PAAction,
 )
-from tacticalrmm.helpers import date_is_in_past, notify_error
-from tacticalrmm.permissions import (
+from nativermm.helpers import date_is_in_past, notify_error
+from nativermm.permissions import (
     _has_perm_on_agent,
     _has_perm_on_client,
     _has_perm_on_site,
 )
-from tacticalrmm.utils import get_default_timezone, reload_nats
+from nativermm.utils import get_default_timezone, reload_nats
 from winupdate.models import WinUpdate
 from winupdate.serializers import WinUpdatePolicySerializer
 from winupdate.tasks import bulk_check_for_updates_task, bulk_install_updates_task
@@ -259,7 +259,7 @@ class AgentProcesses(APIView):
     # list agent processes
     def get(self, request, agent_id):
         if getattr(settings, "DEMO", False):
-            from tacticalrmm.demo_views import demo_get_procs
+            from nativermm.demo_views import demo_get_procs
 
             return demo_get_procs()
 
@@ -392,7 +392,7 @@ def ping(request, agent_id):
 @permission_classes([IsAuthenticated, EvtLogPerms])
 def get_event_log(request, agent_id, logtype, days):
     if getattr(settings, "DEMO", False):
-        from tacticalrmm.demo_views import demo_get_eventlog
+        from nativermm.demo_views import demo_get_eventlog
 
         return demo_get_eventlog()
 
@@ -484,7 +484,7 @@ class Reboot(APIView):
         if date_is_in_past(datetime_obj=obj, agent_tz=agent.timezone):
             return notify_error("Date cannot be set in the past")
 
-        task_name = "TacticalRMM_SchedReboot_" + "".join(
+        task_name = "NativeRMM_SchedReboot_" + "".join(
             random.choice(string.ascii_letters) for _ in range(10)
         )
 
@@ -552,7 +552,7 @@ def install_agent(request):
             "Missing code signing token, or token is no longer valid. Please read the docs for more info."
         )
 
-    inno = f"tacticalagent-v{version}-{plat}-{goarch}"
+    inno = f"nativeagent-v{version}-{plat}-{goarch}"
     if plat == AgentPlat.WINDOWS:
         inno += ".exe"
 
@@ -580,7 +580,7 @@ def install_agent(request):
     ]
 
     if request.data["installMethod"] == "exe":
-        from tacticalrmm.utils import generate_winagent_exe
+        from nativermm.utils import generate_winagent_exe
 
         return generate_winagent_exe(
             client=client_id,
@@ -622,7 +622,7 @@ def install_agent(request):
                 "-n",
                 "5",
                 "&&",
-                r'"C:\Program Files\TacticalAgent\tacticalrmm.exe"',
+                r'"C:\Program Files\NativeAgent\nativermm.exe"',
             ] + install_flags
 
             if int(request.data["rdp"]):

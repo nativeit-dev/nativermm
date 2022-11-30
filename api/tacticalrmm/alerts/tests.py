@@ -10,8 +10,8 @@ from alerts.tasks import cache_agents_alert_template
 from autotasks.models import TaskResult
 from core.tasks import cache_db_fields_task, handle_resolved_stuff
 from core.utils import get_core_settings
-from tacticalrmm.constants import AgentMonType, AlertSeverity, AlertType, CheckStatus
-from tacticalrmm.test import TacticalTestCase
+from nativermm.constants import AgentMonType, AlertSeverity, AlertType, CheckStatus
+from nativermm.test import NativeTestCase
 
 from .models import Alert, AlertTemplate
 from .serializers import (
@@ -23,7 +23,7 @@ from .serializers import (
 base_url = "/alerts"
 
 
-class TestAlertsViews(TacticalTestCase):
+class TestAlertsViews(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -351,7 +351,7 @@ class TestAlertsViews(TacticalTestCase):
         )
 
 
-class TestAlertTasks(TacticalTestCase):
+class TestAlertTasks(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -1508,7 +1508,7 @@ class TestAlertTasks(TacticalTestCase):
         self.assertEqual(Alert.objects.count(), 31)
 
 
-class TestAlertPermissions(TacticalTestCase):
+class TestAlertPermissions(NativeTestCase):
     def setUp(self):
         self.setup_coresettings()
         self.setup_client()

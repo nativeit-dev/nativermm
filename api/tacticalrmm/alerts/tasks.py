@@ -1,7 +1,7 @@
 from django.utils import timezone as djangotime
 
 from agents.models import Agent
-from tacticalrmm.celery import app
+from nativermm.celery import app
 
 from .models import Alert
 

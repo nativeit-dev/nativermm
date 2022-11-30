@@ -13,7 +13,7 @@ class Command(BaseCommand):
             case "api":
                 self.stdout.write(settings.ALLOWED_HOSTS[0])
             case "version":
-                self.stdout.write(settings.TRMM_VERSION)
+                self.stdout.write(settings.NATIVERMM_VERSION)
             case "webversion":
                 self.stdout.write(settings.WEB_VERSION)
             case "meshver":

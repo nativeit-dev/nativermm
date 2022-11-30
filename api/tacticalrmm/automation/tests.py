@@ -6,8 +6,8 @@ from django.db.models import Prefetch
 from agents.models import Agent
 from clients.models import Site
 from core.utils import get_core_settings
-from tacticalrmm.constants import AgentMonType, TaskSyncStatus
-from tacticalrmm.test import TacticalTestCase
+from nativermm.constants import AgentMonType, TaskSyncStatus
+from nativermm.test import NativeTestCase
 from winupdate.models import WinUpdatePolicy
 
 from .serializers import (
@@ -18,7 +18,7 @@ from .serializers import (
 )
 
 
-class TestPolicyViews(TacticalTestCase):
+class TestPolicyViews(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()
@@ -390,7 +390,7 @@ class TestPolicyViews(TacticalTestCase):
         self.check_not_authenticated("delete", url)
 
 
-class TestPolicyTasks(TacticalTestCase):
+class TestPolicyTasks(NativeTestCase):
     def setUp(self):
         self.authenticate()
         self.setup_coresettings()

@@ -1,18 +1,19 @@
-# Tactical RMM
+# Native RMM
 
-![CI Tests](https://github.com/amidaware/tacticalrmm/actions/workflows/ci-tests.yml/badge.svg?branch=develop)
-[![codecov](https://codecov.io/gh/amidaware/tacticalrmm/branch/develop/graph/badge.svg?token=8ACUPVPTH6)](https://codecov.io/gh/amidaware/tacticalrmm)
+![CI Tests](https://github.com/nativeit/nativermm/actions/workflows/ci-tests.yml/badge.svg?branch=develop)
+[![codecov](https://codecov.io/gh/nativeit/nativermm/branch/develop/graph/badge.svg?token=8ACUPVPTH6)](https://codecov.io/gh/nativeit/nativermm)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
-Tactical RMM is a remote monitoring & management tool, built with Django and Vue.\
-It uses an [agent](https://github.com/amidaware/rmmagent) written in golang and integrates with [MeshCentral](https://github.com/Ylianst/MeshCentral)
+Native RMM is a remote monitoring & management tool, built with Django and Vue.\
+It uses an [agent](https://github.com/nativeit/rmmagent) written in golang and integrates with [MeshCentral](https://github.com/Ylianst/MeshCentral)
 
-# [LIVE DEMO](https://demo.tacticalrmm.com/)
+# [LIVE DEMO](https://demo.nativermm.com/)
+
 Demo database resets every hour. A lot of features are disabled for obvious reasons due to the nature of this app.
 
 ### [Discord Chat](https://discord.gg/upGTkWp)
 
-### [Documentation](https://docs.tacticalrmm.com)
+### [Documentation](https://docs.nativermm.com)
 
 ## Features
 
@@ -33,11 +34,13 @@ Demo database resets every hour. A lot of features are disabled for obvious reas
 - Windows 7, 8.1, 10, 11, Server 2008R2, 2012R2, 2016, 2019, 2022
 
 ## Linux agent versions supported
+
 - Any distro with systemd which includes but is not limited to: Debian (10, 11), Ubuntu x86_64 (18.04, 20.04, 22.04), Synology 7, centos, freepbx and more!
 
 ## Mac agent versions supported
+
 - 64 bit Intel and Apple Silicon (M1, M2)
 
 ## Installation / Backup / Restore / Usage
 
-### Refer to the [documentation](https://docs.tacticalrmm.com)
+### Refer to the [documentation](https://docs.nativermm.com)

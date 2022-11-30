@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from agents.models import Agent
-from tacticalrmm.constants import AGENT_STATUS_ONLINE, ONLINE_AGENTS
+from nativermm.constants import AGENT_STATUS_ONLINE, ONLINE_AGENTS
 
 
 class Command(BaseCommand):

@@ -15,7 +15,7 @@ from django.utils import timezone as djangotime
 
 from core.utils import get_core_settings
 from logs.models import BaseAuditModel, DebugLog
-from tacticalrmm.constants import (
+from nativermm.constants import (
     FIELDS_TRIGGER_TASK_UPDATE_AGENT,
     POLICY_TASK_FIELDS_TO_COPY,
     AlertSeverity,
@@ -31,8 +31,8 @@ if TYPE_CHECKING:
     from agents.models import Agent
     from checks.models import Check
 
-from tacticalrmm.models import PermissionQuerySet
-from tacticalrmm.utils import (
+from nativermm.models import PermissionQuerySet
+from nativermm.utils import (
     bitdays_to_string,
     bitmonthdays_to_string,
     bitmonths_to_string,
@@ -43,7 +43,7 @@ from tacticalrmm.utils import (
 
 def generate_task_name() -> str:
     chars = string.ascii_letters
-    return "TacticalRMM_" + "".join(random.choice(chars) for i in range(35))
+    return "NativeRMM_" + "".join(random.choice(chars) for i in range(35))
 
 
 class AutomatedTask(BaseAuditModel):

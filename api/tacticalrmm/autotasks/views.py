@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from agents.models import Agent
 from automation.models import Policy
-from tacticalrmm.permissions import _has_perm_on_agent
+from nativermm.permissions import _has_perm_on_agent
 
 from .models import AutomatedTask
 from .permissions import AutoTaskPerms, RunAutoTaskPerms

@@ -5,7 +5,7 @@ from packaging import version as pyver
 from agents.models import Agent
 from agents.tasks import send_agent_update_task
 from core.utils import get_core_settings, token_is_valid
-from tacticalrmm.constants import AGENT_DEFER
+from nativermm.constants import AGENT_DEFER
 
 
 class Command(BaseCommand):
